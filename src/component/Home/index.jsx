@@ -11,8 +11,9 @@ import toast, { Toaster } from 'react-hot-toast';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Cookies from "js-cookie";
 import { authenticateUserAction } from '../../coreFile/action';
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import WallletConnect from './solfareWalletConnect';
+import usePresale from "../../hooks/usePresale";
 
 const now = 0;
 
@@ -23,6 +24,17 @@ const Home = () => {
 	const [show, setShow] = useState(false);
 	const [refLink, setRefLink] = useState('');
 	const [isLoggedIn, setisLoggedIn] = useState(false);
+	const [solBalance, setSolBalance] = useState(0);
+	const { buyToken, balance, price_per_token, buyAmount } = usePresale();
+
+	const onBuyToken = async () => {
+		if (solBalance < 0.1) {
+		  toast.warning("Please check SOL balance again.");
+		  return;
+		}
+		buyToken(solBalance, solBalance * price_per_token);
+	  };
+	
 
 	useEffect(() => {
 		if (loginData?.walletAddress) {
@@ -40,44 +52,28 @@ const Home = () => {
 		navigator.clipboard.writeText(refLink);
 	};
 
-	const userLogin = async () => {
-		try {
-			let Data = {
-				walletAddress: '0x6028d7b5B2D308C67903640F4241702Ed64c52f3'
-			}
-			let res = await authenticateUserAction(Data);
-			if (res.success) {
-				toast.success('Connected successfully!')
-				Cookies.set('bitmeUserLogin', JSON.stringify(res.data));
-				setisLoggedIn(true);
-			}
-		} catch (err) {
-			console.log(err)
-		}
-	};
-
 	const columns = [
 		{
 			name: 'time',
-			width:'25%',
-			height:'20px',
+			width: '25%',
+			height: '20px',
 			selector: row => row.time,
 		},
 		{
 			name: 'token price',
-			width:'20%',
-			height:'20px',
+			width: '20%',
+			height: '20px',
 			selector: row => row.tokenprice,
 		},
 		{
 			name: 'address',
-			width:'35%',
-			height:'20px',
+			width: '35%',
+			height: '20px',
 			selector: row => row.address,
 		},
 		{
 			name: 'amount',
-			height:'20px',
+			height: '20px',
 			selector: row => row.amount,
 		}
 
@@ -126,15 +122,15 @@ const Home = () => {
 			address: '12po...Bg43',
 			amount: '0.0 bitme'
 		},
-		
-	
-		
+
+
+
 	];
 	createTheme('solarized', {
 		text: {
 			primary: 'rgb(100 48 37)',
 			secondary: '#643025',
-			fontWeight:'500'
+			fontWeight: '500'
 		},
 		background: {
 			default: 'transparent',
@@ -180,7 +176,7 @@ const Home = () => {
 										<span className='me-4 btn-success refText btn-green' >REFERRAL LINK DETECTED, ENJOY THE  BENEFITS!</span>
 									}
 									REFER AND EARN</Button>
-								<Button onClick={()=>redirectTo('https://t.me/Bitme_ai')} variant='light-primary' className='me-3 btn-sm px-4 mb-4'>JOIN COMMUNITY</Button>
+								<Button onClick={() => redirectTo('https://t.me/Bitme_ai')} variant='light-primary' className='me-3 btn-sm px-4 mb-4'>JOIN COMMUNITY</Button>
 							</div>
 						</div>
 						<div>
@@ -426,11 +422,19 @@ const Home = () => {
 																<label className="small text-uppercase text-light-primary">You Pay</label>
 															</div>
 															<Form.Group className=" position-relative mb-1" controlId="formBasicEmail">
-																<Form.Control type="text" value='0' className='border-0 rounded-2' />
+																{/* <Form.Control type="text" value='0' className='border-0 rounded-2' /> */}
+																<input
+																	type="number"
+																	value={Number(solBalance).toString()}
+																	onChange={(e) => {
+																		setSolBalance(Number(e.target.value));
+																	}}
+																	className='border-0 rounded-2'
+																/>
 																<h6 className='mb-0 fw-bold d-flex align-items-center position-absolute copybtn bg-transparent me-2'>SOL<img src={`${config.BASE_URL}assets/images/solana.png`} width={`16px`} className='ms-1' /></h6>
 															</Form.Group>
 															<div className='text-end'>
-																<label className="small text-uppercase text-light-primary">Balance 0.0</label>
+																<label className="small text-uppercase text-light-primary">Balance {(Number(balance) / 10 ** 9).toFixed(2)}</label>
 															</div>
 														</Card>
 													</div>
@@ -440,22 +444,29 @@ const Home = () => {
 														<Card className='p-2'>
 															<div className='d-flex justify-content-between mb-1'>
 																<label className="small text-uppercase text-light-primary">You Get</label>
-
 															</div>
 															<Form.Group className=" position-relative mb-1" controlId="formBasicEmail">
-																<Form.Control type="text" value='0' className='border-0 rounded-2' />
-																<h6 className='mb-0 fw-bold d-flex align-items-center position-absolute copybtn bg-transparent me-2'>SOL<img src={`${config.BASE_URL}assets/images/bitme.png`} width={`16px`} className='ms-1' /></h6>
+																<input
+																	value={Number(solBalance * price_per_token).toFixed(2)}
+																	className='border-0 rounded-2'
+																/>
+																<h6 className='mb-0 fw-bold d-flex align-items-center position-absolute copybtn bg-transparent me-2'>TBITME<img src={`${config.BASE_URL}assets/images/bitme.png`} width={`16px`} className='ms-1' /></h6>
 															</Form.Group>
 															<div className='d-flex justify-content-between mb-1 px-2'>
-																<label className="small text-uppercase text-light-primary">Max</label>
-																<label className="small text-uppercase text-light-primary">Balance 0.0</label>
+																{/* <label className="small text-uppercase text-light-primary">Max</label> */}
+																<label className="small text-uppercase text-light-primary">Balance {Number(buyAmount) / 10 ** 9}</label>
 															</div>
 
 														</Card>
 													</div>
 												</Col>
 												<Col lg={12} className=''>
-													<Button disabled className='text-uppercase w-100 mb-2'>Confirm</Button>
+													<Button 
+														className='text-uppercase w-100 mb-2'
+														onClick={onBuyToken}
+													>
+														BUY
+													</Button>
 													<div className='text-uppercase text-center fw-medium lh-sm xs-small'>
 														by clicking confirm, you agree to our terms and conditions
 													</div>

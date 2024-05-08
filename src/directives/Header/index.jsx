@@ -5,10 +5,9 @@ import '../../component/componentCss/header.css';
 import { authenticateUserAction } from '../../coreFile/action';
 import Cookies from "js-cookie";
 import toast, { Toaster } from "react-hot-toast";
-import { Wallet } from '../../component/Home/WalletConnectButton';
+import { WalletConnectProvider } from '../../component/Home/WalletConnectProvider';
 import config from '../../config';
-
-import WallletConnect from '../../component/Home/solfareWalletConnect';
+import { WalletMultiButton} from '@solana/wallet-adapter-react-ui';
 
 const Header = () => {
 	const [isSticky, setIsSticky] = useState(false);
@@ -56,7 +55,8 @@ const Header = () => {
 									<Nav.Link target='__blank' href="https://docs.bitme.ai/">Docs</Nav.Link>
 								</Nav>
 								<div className='headbtn'>
-									<WallletConnect isLoggedIn={isLoggedIn} setisLoggedIn={setisLoggedIn} ></WallletConnect>
+									{/* <WalletConnectProvider /> */}
+									<WalletMultiButton/>
 								</div>
 
 							</Navbar.Collapse>
