@@ -1,0 +1,25 @@
+
+
+.header{
+    box-shadow: 0 6px 14px #0000001a;
+    background-color: var(--bs-white);
+}
+body .navbar {
+    --bs-navbar-padding-y: 0rem;
+}
+.navbar-nav .nav-link.active, .navbar-nav .nav-link.show {
+    --bs-navbar-active-color:#fff;
+    background-color: var(--bs-nav-link-color);
+}
+.nav-link {
+    --bs-nav-link-padding-y:1.5rem;
+}
+
+.nav-link {
+    --bs-nav-link-color:var(--bs-light-primary);
+    background: var(--bs-primary);
+}
+@media (min-width: 1200px) {
+.navbar-expand-xl .navbar-nav .nav-link {
+    --bs-navbar-nav-link-padding-x:30px;
+}}

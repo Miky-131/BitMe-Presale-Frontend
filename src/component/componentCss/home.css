@@ -1,0 +1,118 @@
+.price-detail-card {
+    min-height: 187px;
+}
+.progress, .progress-stacked {
+--bs-secondary-bg:#b8a094;
+
+}
+img, svg{
+    max-width: 100%;
+}
+/* --------------- */
+.copybtn {
+    top: 0;
+    right: 0;
+    display: flex;
+    bottom: 0;
+    align-items: center;
+}
+.referral_link .form-control{
+    height: 48px;
+}
+.referral_link .form-control:focus {
+    border-color: none;
+    box-shadow: none;
+  }
+.v-line {
+    width: 6px;
+    height: 40px;
+    background: #fff;
+}
+
+.modal-backdrop
+{
+    opacity:0.8 !important;
+}
+.refText{
+    font-size: 12px;
+}
+/* --------- */
+.presale label {
+    font-weight: 500;
+}
+.xs-small{
+    font-size: 12px;
+}
+body .enqGkw:disabled {
+    cursor: unset;
+    color: rgb(100 48 37);
+    fill: rgb(100 48 37);
+}
+body .rdt_TableHead {
+    color: #846359;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 600;
+}
+body .rdt_TableBody{
+    color: #643025;
+    font-weight: 500;
+}
+body .cVgYGe {
+    font-weight: 600;
+    color: #643025;
+    background-color: transparent;
+    min-height: 48px;
+    font-size: 16px;
+}
+body .hlUwZf div:first-child {
+    font-weight: 600;
+    color: #643025;
+    background-color: transparent;
+    min-height: 48px;
+}
+.refText {
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-left: -22px;
+    font-size: 0.875rem;
+    /* padding: 10px; */
+}
+.btn-green{
+    background-color: #1caa00;
+    color: #fff6e7;
+}
+.btn-orange{
+    background-color: #f39b5b;
+    color: #82523f;
+}
+.colorBox {
+    width: 20px;
+    height: 10px;
+    margin-top: 5px;
+    background-color: #000;
+}
+.orange{
+    background-color: #f39b5b!important;
+}
+.brown{
+    background-color: #b3998f!important;
+}
+.darkbrown{
+    background-color: #632f25!important;
+}
+.red{
+    background-color: #b30000!important;
+}
+
+@media only screen and (max-width: 991px) {
+    .refText {
+        margin-bottom: 10px;
+        display: block;
+        width: 100%;
+        margin-left: 0!important;
+    }
+    
+  }
