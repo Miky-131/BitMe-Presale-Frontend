@@ -55,7 +55,6 @@ const Header = () => {
 									<Nav.Link target='__blank' href="https://docs.bitme.ai/">Docs</Nav.Link>
 								</Nav>
 								<div className='headbtn'>
-									{/* <WalletConnectProvider /> */}
 									<WalletMultiButton/>
 								</div>
 

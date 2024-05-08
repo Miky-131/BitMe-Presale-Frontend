@@ -1,6 +1,6 @@
 import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useEffect, useMemo, useState } from "react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import * as anchor from "@project-serum/anchor";
 import { SystemProgram, PublicKey } from "@solana/web3.js";
 import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
