@@ -1,0 +1,44 @@
+.modal-header {
+    background-color: #632f25;
+    background-image: url(../../../public/assets/images/referralBanner.png);
+    background-size: 100%;
+    min-height: 92px;
+    border-radius: 15px 15px 0px 0px !important;
+    position: relative;
+    filter: drop-shadow(0px 3px 1.5px rgba(0, 0, 0, 0.68));
+    z-index: 1;
+}
+.modal-open .modal-title {
+    color: #fff6e7;
+    text-align: center;
+    filter: drop-shadow(0px 8px 0px rgba(0,0,0,0.26));
+}
+.referral_link {
+    background-color: #653025;
+    color: #fff6e7;
+    filter: drop-shadow(0px 3px 1.5px rgba(0,0,0,0.68));
+}
+.modal-open .referral_earn .modal-content {
+    --bs-border-radius-lg: 1.5rem;
+    border-radius: 20px 20px 20px 20px;
+}
+.modal-body{
+    background-image: url(../../../public/assets/images/referral_bg.png);
+    background-size: contain;
+    border-radius: 0px 0px 20px 20px;
+}
+.referral_link small {
+    font-weight: 700;
+    letter-spacing: 0.4px;
+}
+.referral_link .form-control {
+    background: #fff6e7;
+    padding-right: 40px;
+    border-radius: 15px;
+}
+
+.modal-body h5 {
+    color: #421a13;
+    font-weight: 700;
+    letter-spacing: 0px;
+}
