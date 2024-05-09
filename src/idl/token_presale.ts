@@ -94,8 +94,32 @@ export type TokenPresale = {
       ],
       "args": [
         {
-          "name": "receiverAccount",
-          "type": "publicKey"
+          "name": "pricePerToken",
+          "type": "u64"
+        },
+        {
+          "name": "softcapAmount",
+          "type": "u64"
+        },
+        {
+          "name": "hardcapAmount",
+          "type": "u64"
+        },
+        {
+          "name": "startTime",
+          "type": "u64"
+        },
+        {
+          "name": "endTime",
+          "type": "u64"
+        },
+        {
+          "name": "identifier",
+          "type": "u8"
+        },
+        {
+          "name": "stage",
+          "type": "u8"
         }
       ]
     },
@@ -161,6 +185,31 @@ export type TokenPresale = {
       "args": [
         {
           "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "identifier",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "startPresale",
+      "accounts": [
+        {
+          "name": "presaleInfo",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "startTime",
           "type": "u64"
         },
         {
@@ -501,7 +550,7 @@ export type TokenPresale = {
             "type": "publicKey"
           },
           {
-            "name": "receiver",
+            "name": "subscriber",
             "type": "publicKey"
           },
           {
@@ -633,11 +682,6 @@ export type TokenPresale = {
       "code": 6016,
       "name": "SoftCapNotReached",
       "msg": "SoftCap reached"
-    },
-    {
-      "code": 6017,
-      "name": "TransactionFailed",
-      "msg": "Purchase transaction failed"
     }
   ]
 };
@@ -738,8 +782,32 @@ export const IDL: TokenPresale = {
       ],
       "args": [
         {
-          "name": "receiverAccount",
-          "type": "publicKey"
+          "name": "pricePerToken",
+          "type": "u64"
+        },
+        {
+          "name": "softcapAmount",
+          "type": "u64"
+        },
+        {
+          "name": "hardcapAmount",
+          "type": "u64"
+        },
+        {
+          "name": "startTime",
+          "type": "u64"
+        },
+        {
+          "name": "endTime",
+          "type": "u64"
+        },
+        {
+          "name": "identifier",
+          "type": "u8"
+        },
+        {
+          "name": "stage",
+          "type": "u8"
         }
       ]
     },
@@ -805,6 +873,31 @@ export const IDL: TokenPresale = {
       "args": [
         {
           "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "identifier",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "startPresale",
+      "accounts": [
+        {
+          "name": "presaleInfo",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "startTime",
           "type": "u64"
         },
         {
@@ -1145,7 +1238,7 @@ export const IDL: TokenPresale = {
             "type": "publicKey"
           },
           {
-            "name": "receiver",
+            "name": "subscriber",
             "type": "publicKey"
           },
           {
@@ -1277,11 +1370,6 @@ export const IDL: TokenPresale = {
       "code": 6016,
       "name": "SoftCapNotReached",
       "msg": "SoftCap reached"
-    },
-    {
-      "code": 6017,
-      "name": "TransactionFailed",
-      "msg": "Purchase transaction failed"
     }
   ]
 };

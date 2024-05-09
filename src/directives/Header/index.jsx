@@ -11,17 +11,17 @@ import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 
-const Header = () => {
+const Header = ({ isLoggedIn, setisLoggedIn }) => {
 	const _useWallet = useWallet();
 	const [isSticky, setIsSticky] = useState(false);
-	const [isLoggedIn, setisLoggedIn] = useState(false);
+	// const [isLoggedIn, setisLoggedIn] = useState(false);
 	const loginData = Cookies.get('bitmeUserLogin') ? JSON.parse(Cookies.get('bitmeUserLogin')) : null;
 
 
 	useEffect(() => {
-		if (loginData?.walletAddress) {
-			setisLoggedIn(true);
-		}
+		// if (loginData?.walletAddress) {
+		// 	setisLoggedIn(true);
+		// }
 		const handleScroll = () => {
 			const offset = window.scrollY;
 			if (offset > 100) { // Change 100 to whatever offset you need
@@ -46,7 +46,7 @@ const Header = () => {
 		} else {
 			console.log("_useWallet : disconnect")
 			Cookies.remove('bitmeUserLogin');
-      setisLoggedIn(false);
+			setisLoggedIn(false);
 		}
 	}, [_useWallet])
 
@@ -57,7 +57,7 @@ const Header = () => {
 				walletAddress: publicKey
 			}
 			let res = await authenticateUserAction(Data);
-			
+
 			if (res.success) {
 				// toast.success('Connected successfully!')
 				Cookies.set('bitmeUserLogin', JSON.stringify(res.data));
@@ -80,7 +80,7 @@ const Header = () => {
 							<Navbar.Toggle aria-controls="basic-navbar-nav" />
 							<Navbar.Collapse id="basic-navbar-nav">
 								<Nav className="mx-auto">
-									<Nav.Link href={`${config.BASE_URL}`}>Presale</Nav.Link>
+									<Nav.Link href={`${config.BASE_URL}`} className='active'>Presale</Nav.Link>
 									<Nav.Link target='__blank' href="https://bitme.ai/bitdex">BitDEX</Nav.Link>
 									<Nav.Link target='__blank' href="https://bitme.ai/bitshare">BitSHARE</Nav.Link>
 									<Nav.Link target='__blank' href="https://docs.bitme.ai/">Docs</Nav.Link>

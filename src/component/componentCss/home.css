@@ -100,7 +100,7 @@ body .hlUwZf div:first-child {
     min-height: 30.81px;
 }
 .price-detail-card {
-    min-height: 145px;
+    min-height: 123px;
 }
 .progress, .progress-stacked {
 --bs-secondary-bg:#b8a094;
@@ -126,7 +126,17 @@ body .hlUwZf div:first-child {
     background-color: #b30000!important;
 }
 .sameHeight {
-    min-height: 476px;
+    min-height: 319px;
+}
+.boxOverlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: 0.375rem;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    background: #6a392fc9;
 }
 .mobileShow{
     display: none;
@@ -166,11 +176,18 @@ input[type=number] {
     }
     
   }
+  @media only screen and (max-width: 7670px) {
+
+  }
 
   @media only screen and (max-width: 320px) {
     .modelBtn .wallet-adapter-button{
-        padding-left: 35px;
+        padding-left: 0px;
+        justify-content: center;
       }
+      .wltBtn .wallet-adapter-button {
+        padding: 0 0px;
+    }
       
       .modelBtn .wallet-adapter-dropdown{
         width: 100%;
