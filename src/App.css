@@ -36,37 +36,3 @@
     transform: rotate(360deg);
   }
 }
-
-
-
-.wltBtn .wallet-adapter-button-trigger {
-  background-color: #846359;
-}
-
-.wltBtn .wallet-adapter-button {
-  align-items: center;
-  background-color: initial;
-  border: none;
-  border-radius: 4px;
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  font-family: DM Sans,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  background-color: #653025;
-  height: 35px;
-  line-height: 35px;
-  padding: 0 24px;
-  width: 100%;
-}
-.wltBtn .wallet-adapter-button:not([disabled]):hover {
-  background-color: #846359;
-}
-.modelBtn .wallet-adapter-button{
-  padding-left: 165px;
-}
-
-.modelBtn .wallet-adapter-dropdown{
-  width: 100%;
-}

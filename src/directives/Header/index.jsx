@@ -7,12 +7,9 @@ import Cookies from "js-cookie";
 import toast, { Toaster } from "react-hot-toast";
 import { WalletConnectProvider } from '../../component/Home/WalletConnectProvider';
 import config from '../../config';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { useWallet } from '@solana/wallet-adapter-react';
-
+import { WalletMultiButton} from '@solana/wallet-adapter-react-ui';
 
 const Header = () => {
-	const _useWallet = useWallet();
 	const [isSticky, setIsSticky] = useState(false);
 	const [isLoggedIn, setisLoggedIn] = useState(false);
 	const loginData = Cookies.get('bitmeUserLogin') ? JSON.parse(Cookies.get('bitmeUserLogin')) : null;
@@ -39,34 +36,6 @@ const Header = () => {
 		};
 	}, []);
 
-	useEffect(() => {
-		if (_useWallet.connected) {
-			console.log({ _useWallet, connected: _useWallet.connected, publicKey: _useWallet?.publicKey?.toBase58() });
-			loginUser(_useWallet?.publicKey?.toBase58())
-		} else {
-			console.log("_useWallet : disconnect")
-			Cookies.remove('bitmeUserLogin');
-      setisLoggedIn(false);
-		}
-	}, [_useWallet])
-
-
-	const loginUser = async (publicKey) => {
-		try {
-			let Data = {
-				walletAddress: publicKey
-			}
-			let res = await authenticateUserAction(Data);
-			
-			if (res.success) {
-				// toast.success('Connected successfully!')
-				Cookies.set('bitmeUserLogin', JSON.stringify(res.data));
-				setisLoggedIn(true);
-			}
-		} catch (err) {
-		}
-	}
-
 	return (
 		<>
 			<header className={`header ${isSticky ? 'sticky' : ''}`}>
@@ -85,8 +54,8 @@ const Header = () => {
 									<Nav.Link target='__blank' href="https://bitme.ai/bitshare">BitSHARE</Nav.Link>
 									<Nav.Link target='__blank' href="https://docs.bitme.ai/">Docs</Nav.Link>
 								</Nav>
-								<div className='headbtn wltBtn'>
-									<WalletMultiButton />
+								<div className='headbtn'>
+									<WalletMultiButton/>
 								</div>
 
 							</Navbar.Collapse>

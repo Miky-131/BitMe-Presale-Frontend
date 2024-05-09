@@ -1,17 +1,12 @@
+.price-detail-card {
+    min-height: 187px;
+}
+.progress, .progress-stacked {
+--bs-secondary-bg:#b8a094;
 
+}
 img, svg{
     max-width: 100%;
-}
-.btn-green{
-    background-color: #1caa00;
-    color: #fff6e7;
-}
-.btn-orange{
-    background-color: #f39b5b;
-    color: #82523f;
-}
-.xs-small{
-    font-size: 12px;
 }
 /* --------------- */
 .copybtn {
@@ -21,7 +16,6 @@ img, svg{
     bottom: 0;
     align-items: center;
 }
-
 .referral_link .form-control{
     height: 48px;
 }
@@ -29,7 +23,6 @@ img, svg{
     border-color: none;
     box-shadow: none;
   }
-  
 .v-line {
     width: 6px;
     height: 40px;
@@ -47,7 +40,9 @@ img, svg{
 .presale label {
     font-weight: 500;
 }
-
+.xs-small{
+    font-size: 12px;
+}
 body .enqGkw:disabled {
     cursor: unset;
     color: rgb(100 48 37);
@@ -61,17 +56,7 @@ body .rdt_TableHead {
 }
 body .rdt_TableBody{
     color: #643025;
-    font-weight: 700;
-}
-body .rdt_TableBody .rdt_TableRow div {
-    color: #643025;
-    font-weight: 700;
-    font-size: 16px;
-}
-body .bCELCA:disabled {
-    cursor: unset;
-    color: #623e36;
-    fill: #643025;
+    font-weight: 500;
 }
 body .cVgYGe {
     font-weight: 600;
@@ -87,26 +72,22 @@ body .hlUwZf div:first-child {
     min-height: 48px;
 }
 .refText {
-    padding: 2px 10px;
+    padding: 4px 10px;
     border-radius: 4px;
-    display: block;
     text-transform: uppercase;
     font-weight: 500;
+    margin-left: -22px;
     font-size: 0.875rem;
     /* padding: 10px; */
 }
-.messageBtn {
-    padding: 2px!important;
-    min-height: 30.81px;
+.btn-green{
+    background-color: #1caa00;
+    color: #fff6e7;
 }
-.price-detail-card {
-    min-height: 145px;
+.btn-orange{
+    background-color: #f39b5b;
+    color: #82523f;
 }
-.progress, .progress-stacked {
---bs-secondary-bg:#b8a094;
-
-}
-
 .colorBox {
     width: 20px;
     height: 10px;
@@ -125,55 +106,13 @@ body .hlUwZf div:first-child {
 .red{
     background-color: #b30000!important;
 }
-.sameHeight {
-    min-height: 476px;
-}
-.mobileShow{
-    display: none;
-}
-.desktopShow{
-    display: block;
-}
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-input[type=number] {
-    -moz-appearance: textfield;
-}
-
-
-@media only screen and (max-width: 1199px) {
-    body .desktopShow {
-        display: none;
-    }
-    body .mobileShow {
-        display: block;
-    }
-    .referralBtn{
-        display: flex;
-        -webkit-flex-direction: column-reverse;
-        flex-direction: column-reverse;
-    }
-}
 
 @media only screen and (max-width: 991px) {
     .refText {
+        margin-bottom: 10px;
         display: block;
         width: 100%;
         margin-left: 0!important;
     }
-    
-  }
-
-  @media only screen and (max-width: 320px) {
-    .modelBtn .wallet-adapter-button{
-        padding-left: 35px;
-      }
-      
-      .modelBtn .wallet-adapter-dropdown{
-        width: 100%;
-      }
     
   }
