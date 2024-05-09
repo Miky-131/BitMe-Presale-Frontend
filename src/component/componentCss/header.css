@@ -17,7 +17,7 @@ body .navbar {
 
 .nav-link {
     --bs-nav-link-color:var(--bs-light-primary);
-    background: var(--bs-primary);
+    /* background: var(--bs-primary); */
 }
 @media (min-width: 1200px) {
 .navbar-expand-xl .navbar-nav .nav-link {

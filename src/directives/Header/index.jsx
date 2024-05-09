@@ -9,6 +9,7 @@ import { WalletConnectProvider } from '../../component/Home/WalletConnectProvide
 import config from '../../config';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { WalletSelect } from '../../component/WalletSelect.jsx';
 
 
 const Header = () => {
@@ -86,7 +87,7 @@ const Header = () => {
 									<Nav.Link target='__blank' href="https://docs.bitme.ai/">Docs</Nav.Link>
 								</Nav>
 								<div className='headbtn wltBtn'>
-									<WalletMultiButton />
+									<WalletSelect />
 								</div>
 
 							</Navbar.Collapse>

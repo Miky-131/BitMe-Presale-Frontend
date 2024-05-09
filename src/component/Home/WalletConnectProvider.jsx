@@ -35,7 +35,11 @@ export const WalletConnectProvider = ({children}) => {
              * instantiate its legacy wallet adapter here. Common legacy adapters can be found
              * in the npm package `@solana/wallet-adapter-wallets`.
              */
-            new UnsafeBurnerWalletAdapter(),
+            // new UnsafeBurnerWalletAdapter(),
+            // new PhantomWalletAdapter(),
+            // new SolflareWalletAdapter({ network }),
+            // new TorusWalletAdapter(),
+            // new LedgerWalletAdapter(),
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [network]

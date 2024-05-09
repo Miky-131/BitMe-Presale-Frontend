@@ -10,6 +10,15 @@ import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { clusterApiUrl } from '@solana/web3.js';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-unsafe-burner';
+import { PhantomWalletAdapter } from '@solana/wallet-adapter-phantom';
+import { SolflareWalletAdapter } from '@solana/wallet-adapter-solflare';
+
+// import {
+//     LedgerWalletAdapter,
+//     PhantomWalletAdapter,
+//     SolflareWalletAdapter,
+//     TorusWalletAdapter,
+//   } from '@solana/wallet-adapter-wallets';
 
 
 function App() {
@@ -19,6 +28,8 @@ function App() {
 
   const wallets = useMemo(
     () => [
+      new PhantomWalletAdapter(),
+      new SolflareWalletAdapter(),
       new UnsafeBurnerWalletAdapter(),
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
