@@ -1,18 +1,18 @@
 const config = {
 
     //======= Localhost =======//
-    BASE_URL: '/', 
+    // BASE_URL: '/bitme/', 
     // API_URL : 'http://localhost:8182/api',  // Localhost
 
 
     //======= Esp Server =======//
-    // BASE_URL: '/bitme/presale/', 
+    BASE_URL: '/bitme/', 
     API_URL : 'https://espsofttech.org:8182/api',
 
 
     //======= Live Server =======//
-    //  BASE_URL: '/presale/app/', 
-    //  API_URL : '',
+    //  BASE_URL: '/', 
+    //  API_URL : 'https://app.bitme.ai/api',
 
 }
 // https://app.bitme.ai/
