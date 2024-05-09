@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import * as anchor from "@project-serum/anchor";
 import { SystemProgram, PublicKey } from "@solana/web3.js";
 import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
-import { PRESALE_AUTHORITY, PRESALE_PROGRAM_PUBKEY, PRESALE_SEED, PRESALE_RESERVE_SEED, TOKEN_DECIMAL, TOKEN_PUBKEY, USER_SEED, ESCROW_SEED } from "./constants";
+import { PRESALE_AUTHORITY, PRESALE_PROGRAM_PUBKEY, PRESALE_SEED, PRESALE_RESERVE_SEED, TOKEN_DECIMAL, TOKEN_PUBKEY, USER_SEED, ESCROW_SEED } from "./constants.js";
 import { utf8 } from "@project-serum/anchor/dist/cjs/utils/bytes";
 import { ASSOCIATED_PROGRAM_ID } from "@project-serum/anchor/dist/cjs/utils/token";
 
@@ -22,6 +22,7 @@ export default function usePresale() {
   const [transactionPending, setTransactionPending] = useState(false);
   const [price_per_token, setPricePerToken] = useState(0);
   const [buyAmount, setBuyAmount] = useState(0);
+  const [receiver, setReceiver] = useState();
   const [quoteAmount, setQuoteAmount] = useState(0);
   const [stageNumber, setStageNumber] = useState(0);
   const [startTime, setStartTime] = useState(0);
@@ -63,8 +64,9 @@ export default function usePresale() {
           setEndTime(info.endTime);
           setTotalBuyAmount(Number(info.soldTokenAmount));
           setEntireBuyAmount(Number(info.soldQuoteAmount) / 10 ** 9);
-          setTotalHardCap(Number(info.hardcapAmount) / 10 ** 9)
-          setTotalSoftCap(Number(info.softcapAmount) / 10 ** 9)
+          setTotalHardCap(Number(info.hardcapAmount) / 10 ** 9);
+          setTotalSoftCap(Number(info.softcapAmount) / 10 ** 9);
+          setReceiver(info.receiver);
         } catch (error) {
           console.log(error);
         } finally {
@@ -138,9 +140,7 @@ export default function usePresale() {
           program.programId
         );
         
-        // Use BigInt for large number calculations
-        const SOL_RECEIVER = new PublicKey("4NdUvCdR6jKz7rv1SAXZQkYT7BUnMuWa2n5nakACniKZ");
-        
+        // Use BigInt for large number calculations        
         const bigIntSolAmount =
         BigInt(Number(solBalance * 10 ** TOKEN_DECIMAL).toFixed(0));
         const tx = await program.methods
@@ -156,7 +156,7 @@ export default function usePresale() {
           userInfo,
           buyerAuthority: publicKey,
           buyer: publicKey,
-          solReceiver: SOL_RECEIVER,
+          solReceiver: receiver,
           rent: anchor.web3.SYSVAR_RENT_PUBKEY,
           systemProgram: anchor.web3.SystemProgram.programId,
           tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,

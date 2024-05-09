@@ -518,7 +518,6 @@ const Home = () => {
 														<Button
 															className='text-uppercase w-100 mb-2'
 															onClick={onBuyToken}
-															disabled
 														>
 															BUY
 														</Button>
