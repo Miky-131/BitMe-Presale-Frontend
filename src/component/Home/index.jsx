@@ -45,7 +45,7 @@ const Home = () => {
 
 	useEffect(() => {
 		if (loginData?.walletAddress) {
-			// setisLoggedIn(true);
+			setisLoggedIn(true);
 			setRefLink(`https://app.bitme.ai/presale/app/${loginData.refCode}`);
 		}
 	}, [loginData]);
@@ -55,9 +55,9 @@ const Home = () => {
 			console.log({ _useWallet, connected: _useWallet.connected, publicKey: _useWallet?.publicKey?.toBase58() });
 			loginUser(_useWallet?.publicKey?.toBase58())
 		} else {
-			setisLoggedIn(false);
 			console.log("_useWallet : disconnect")
 			Cookies.remove('bitmeUserLogin');
+			setisLoggedIn(false);
 		}
 	}, [_useWallet])
 
@@ -67,6 +67,7 @@ const Home = () => {
 				walletAddress: publicKey
 			}
 			let res = await authenticateUserAction(Data);
+			console.log({ res })
 			if (res.success) {
 				// toast.success('Connected successfully!')
 				Cookies.set('bitmeUserLogin', JSON.stringify(res.data));
@@ -188,7 +189,7 @@ const Home = () => {
 
 	return (
 		<>
-			<Header isLoggedIn={isLoggedIn} setisLoggedIn={setisLoggedIn} />
+			<Header />
 			<Toaster />
 			<div className='main'>
 				<section className='presale py-5'>
@@ -294,11 +295,11 @@ const Home = () => {
 												</div>
 												<div className='mb-3'>
 													<label className="small text-uppercase text-light-primary">Start time</label>
-													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>2024/05/15 08:00 </h6>
+													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>2024/05/15 08:00 (Local time)</h6>
 												</div>
 												<div className='mb-3'>
 													<label className="small text-uppercase text-light-primary">end time</label>
-													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>2024/05/20 08:00 </h6>
+													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>2024/05/20 08:00 (local time)</h6>
 												</div>
 												<div className=''>
 													<label className="small text-uppercase text-light-primary">duration</label>
@@ -321,7 +322,7 @@ const Home = () => {
 												<Col lg={6} className='mb-2 pe-lg-1'>
 													<div className='card-style1 '>
 														<Card className='p-2'>
-															<label className="small text-uppercase text-light-primary">Start In</label>
+															<label className="small text-uppercase text-light-primary">Start</label>
 															<ReverseTimer />
 														</Card>
 													</div>
@@ -405,10 +406,7 @@ const Home = () => {
 											</Row>
 
 										</Card>
-										<Card className='p-2  mb-2 sameHeight position-relative'>
-											{isLoggedIn &&
-												<div className='boxOverlay'></div>
-											}
+										<Card className='p-2  mb-2'>
 
 											<Row>
 												{/* <Col lg={6} className='mb-2'>
@@ -446,42 +444,37 @@ const Home = () => {
 														</Card>
 													</div>
 												</Col> */}
-												{!isLoggedIn &&
-													<div className='connect_block'>
-														<Col lg={12} className=' mb-2'>
-															{/* <Button disabled className='text-uppercase w-100'>Connect Solana</Button> */}
-															<div className='headbtn'>
-																<WalletMultiButton ></WalletMultiButton>
-															</div>
-														</Col>
-														<Col lg={12} className=''>
-															<div className='mb-0 small text-uppercase fw-medium mb-2 text-center lh-sm'>
-																You need to connect your external wallet that contains your
-																Solana, such as Phantom Wallet or Solflare, to continue.
-															</div>
-															<div className='card-style1'>
-																<Card className='p-2'>
-																	<div className='small fw-medium text-uppercase text-center lh-sm'>For more information on the presale, the Bitme
-																		project, or how its services work, please
-																		consult the <a href='#' className='text-primary'>documentation</a> section.</div>
-																</Card>
-															</div>
-														</Col>
-													</div>
-												}
-												{isLoggedIn &&
-													<div className='payment_block'>
-														<Col lg={12} className='mb-2'>
-															<div className='card-style1'>
-																<Card className='p-2'>
-																	<div className='d-flex justify-content-between mb-1'>
-																		<label className="small text-uppercase text-light-primary">You Pay</label>
-																	</div>
-																	<Form.Group className=" position-relative mb-1" controlId="formBasicEmail">
-																		<Form.Control type="number" value={Number(solBalance).toString()} onChange={(e) => {
-																			setSolBalance(Number(e.target.value));
-																		}} className='border-0 rounded-2' />
-																		{/* <input
+												{/* <div className='connect_block'>
+													<Col lg={12} className=' mb-2'>
+														<Button disabled className='text-uppercase w-100'>Connect Solana</Button>
+
+													</Col>
+													<Col lg={12} className=''>
+														<div className='mb-0 small text-uppercase fw-medium mb-2 text-center lh-sm'>
+															You need to connect your external wallet that contains your
+															Solana, such as Phantom Wallet or Solflare, to continue.
+														</div>
+														<div className='card-style1'>
+															<Card className='p-2'>
+																<div className='small fw-medium text-uppercase text-center lh-sm'>For more information on the presale, the Bitme
+																	project, or how its services work, please
+																	consult the <a href='#' className='text-primary'>documentation</a> section.</div>
+															</Card>
+														</div>
+													</Col>
+												</div> */}
+												<div className='payment_block'>
+													<Col lg={12} className='mb-2'>
+														<div className='card-style1'>
+															<Card className='p-2'>
+																<div className='d-flex justify-content-between mb-1'>
+																	<label className="small text-uppercase text-light-primary">You Pay</label>
+																</div>
+																<Form.Group className=" position-relative mb-1" controlId="formBasicEmail">
+																	<Form.Control type="number" value={Number(solBalance).toString()} onChange={(e) => {
+																		setSolBalance(Number(e.target.value));
+																	}} className='border-0 rounded-2' />
+																	{/* <input
 																		type="number"
 																		value={Number(solBalance).toString()}
 																		onChange={(e) => {
@@ -489,54 +482,52 @@ const Home = () => {
 																		}}
 																		className='border-0 rounded-2'
 																	/> */}
-																		<h6 className='mb-0 fw-bold d-flex align-items-center position-absolute copybtn bg-transparent me-2'>SOL<img src={`${config.BASE_URL}assets/images/solana.png`} width={`16px`} className='ms-1' /></h6>
-																	</Form.Group>
-																	<div className='d-flex justify-content-between mb-1 px-2'>
-																		<label className="small text-uppercase text-light-primary">Max</label>
-																		<label className="small text-uppercase text-light-primary">Balance {(Number(balance) / 10 ** 9).toFixed(2)}</label>
-																	</div>
+																	<h6 className='mb-0 fw-bold d-flex align-items-center position-absolute copybtn bg-transparent me-2'>SOL<img src={`${config.BASE_URL}assets/images/solana.png`} width={`16px`} className='ms-1' /></h6>
+																</Form.Group>
+																<div className='d-flex justify-content-between mb-1 px-2'>
+																	<label className="small text-uppercase text-light-primary">Max</label>
+																	<label className="small text-uppercase text-light-primary">Balance {(Number(balance) / 10 ** 9).toFixed(2)}</label>
+																</div>
 
-																</Card>
-															</div>
-														</Col>
-														<Col lg={12} className='mb-2'>
-															<div className='card-style1'>
-																<Card className='p-2'>
-																	<div className='d-flex justify-content-between mb-1'>
-																		<label className="small text-uppercase text-light-primary">You Get</label>
-																	</div>
-																	<Form.Group className=" position-relative mb-1" controlId="formBasicEmail">
-																		<Form.Control type="number" value={Number(solBalance * price_per_token).toFixed(2)} className='border-0 rounded-2' />
-																		{/* <input
+															</Card>
+														</div>
+													</Col>
+													<Col lg={12} className='mb-2'>
+														<div className='card-style1'>
+															<Card className='p-2'>
+																<div className='d-flex justify-content-between mb-1'>
+																	<label className="small text-uppercase text-light-primary">You Get</label>
+																</div>
+																<Form.Group className=" position-relative mb-1" controlId="formBasicEmail">
+																	<Form.Control type="number" value={Number(solBalance * price_per_token).toFixed(2)} className='border-0 rounded-2' />
+																	{/* <input
 																		value={Number(solBalance * price_per_token).toFixed(2)}
 																		className='border-0 rounded-2'
 																	/> */}
-																		<h6 className='mb-0 fw-bold d-flex align-items-center position-absolute copybtn bg-transparent me-2'>BITME<img src={`${config.BASE_URL}assets/images/bitme.png`} width={`16px`} className='ms-1' /></h6>
-																	</Form.Group>
-																	<div className='d-flex justify-content-between mb-1 px-2'>
-																		<label className="small text-uppercase text-light-primary">&nbsp;</label>
-																		<label className="small text-uppercase text-light-primary">Balance {Number(buyAmount) / 10 ** 9}</label>
-																	</div>
+																	<h6 className='mb-0 fw-bold d-flex align-items-center position-absolute copybtn bg-transparent me-2'>BITME<img src={`${config.BASE_URL}assets/images/bitme.png`} width={`16px`} className='ms-1' /></h6>
+																</Form.Group>
+																<div className='d-flex justify-content-between mb-1 px-2'>
+																	<label className="small text-uppercase text-light-primary">&nbsp;</label>
+																	<label className="small text-uppercase text-light-primary">Balance {Number(buyAmount) / 10 ** 9}</label>
+																</div>
 
-																</Card>
-															</div>
-														</Col>
-														<Col lg={12} className=''>
-															<Button
-																className='text-uppercase w-100 mb-2'
-																onClick={onBuyToken}
-																disabled
-															>
-																Confirm
-															</Button>
-															<div className='text-uppercase text-center fw-medium lh-sm xs-small'>
-																by clicking confirm, you agree to our terms and conditions
-															</div>
+															</Card>
+														</div>
+													</Col>
+													<Col lg={12} className=''>
+														<Button
+															className='text-uppercase w-100 mb-2'
+															onClick={onBuyToken}
+														>
+															BUY
+														</Button>
+														<div className='text-uppercase text-center fw-medium lh-sm xs-small'>
+															by clicking confirm, you agree to our terms and conditions
+														</div>
 
-														</Col>
+													</Col>
 
-													</div>
-												}
+												</div>
 												{/* <div className='redeem_block'>
 
 													<Col lg={12} className='mb-2'>
@@ -574,34 +565,34 @@ const Home = () => {
 						</div>
 						<div >
 							<Row>
-								<Col lg={12} className=' pe-lg-2'>
+								<Col lg={12} className='mb-2 pe-lg-2'>
 									<Card className='p-2'>
 										<div className='d-lg-flex'>
-											<div className='card-style1 me-2 w-100'>
+											<div className='card-style1 me-2 mb-2 w-100'>
 												<Card className='p-2 pb-0 price-detail-card'>
 													<Row>
 														<Col lg={6} md={6} className='mb-2'>
 															<div className='me-2'>
 																<span className='text-light-primary text-uppercase small fw-medium'>actual price</span>
-																<h6 className='text-primary fw-bold'>$0.02</h6>
+																<h6 className='text-primary'>$0.02 (0.00004 SOL)</h6>
 															</div>
 														</Col>
 														<Col lg={6} md={6} className='mb-2'>
 															<div className='me-2'>
 																<span className='text-light-primary text-uppercase small fw-medium'>funds raised</span>
-																<h6 className='text-primary fw-bold'>$0.00 (0.0 sol)</h6>
+																<h6 className='text-primary'>$0.00 (0.0 sol)</h6>
 															</div>
 														</Col>
 														<Col lg={6} md={6} className='mb-2'>
 															<div className='me-2'>
 																<span className='text-light-primary text-uppercase small fw-medium'>bitme sold / available</span>
-																<h6 className='text-primary mb-0 fw-bold'>0 / 500 000 000</h6>
+																<h6 className='text-primary'>0 / 500 000 000</h6>
 															</div>
 														</Col>
 														<Col lg={6} md={6} className='mb-2'>
 															<div className=''>
 																<span className='text-light-primary text-uppercase small fw-medium'>liquidity pool</span>
-																<h6 className='text-primary mb-0 fw-bold'>$0.00 (0.0 sol)</h6>
+																<h6 className='text-primary'>$0.00 (0.0 sol)</h6>
 															</div>
 														</Col>
 													</Row>
@@ -715,7 +706,7 @@ const Home = () => {
 							<h5 className='mb-4'>Connect your wallet to generate your
 								unique referral link for the Bitme</h5>
 							<div className='referral_link border border-2 p-4 rounded-4 border-primary'>
-								<div className='d-flex align-items-center'>
+								<div className='d-md-flex align-items-center'>
 									<h1 className='mb-0 me-3'>50%</h1>
 									{/* <div class="v-line mx-3"></div> */}
 									<div className='text-start mb-0 small'>Share your unique referral link and earn up to 50% of the redeem fees generated.</div>
@@ -747,7 +738,7 @@ const Home = () => {
 									<Form.Control type="text" value={refLink.slice(0, 40) + '...'} readOnly className='bg-white border-0' />
 									<Button variant='default' onClick={copyToClipboard} className='position-absolute copybtn bg-transparent text-primary border-0'><FaRegClone /></Button>
 								</Form.Group>
-								<div className='d-flex align-items-center'>
+								<div className='d-md-flex align-items-center'>
 									<h1 className='mb-0 me-3'>50%</h1>
 									{/* <div class="v-line mx-3"></div> */}
 									<div className='text-start mb-0 small'>Share your unique referral link and earn up to 50% of the redeem fees generated.</div>

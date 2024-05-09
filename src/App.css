@@ -57,24 +57,16 @@
   background-color: #653025;
   height: 35px;
   line-height: 35px;
-  justify-content: center;
-  padding: 0 0px;
-  width: 100%;
-}
-.headbtn.wltBtn .wallet-adapter-button {
   padding: 0 24px;
+  width: 100%;
 }
 .wltBtn .wallet-adapter-button:not([disabled]):hover {
   background-color: #846359;
 }
 .modelBtn .wallet-adapter-button{
-  padding-left: 0;
-  justify-content: center;
+  padding-left: 165px;
 }
 
 .modelBtn .wallet-adapter-dropdown{
   width: 100%;
-}
-.modal-open,.modal {
-  padding-left: 0px!important;
 }
