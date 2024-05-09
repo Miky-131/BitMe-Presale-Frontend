@@ -13,7 +13,7 @@ import Cookies from "js-cookie";
 import { authenticateUserAction } from '../../coreFile/action';
 import { useParams } from "react-router-dom";
 import WallletConnect from './solfareWalletConnect';
-import usePresale from "../../hooks/usePresale";
+import usePresale from "../../hooks/usePresale.js";
 
 const now = 0;
 
