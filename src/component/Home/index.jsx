@@ -12,13 +12,16 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import Cookies from "js-cookie";
 import { authenticateUserAction } from '../../coreFile/action';
 import { useParams } from "react-router-dom";
-import '../componentCss/modal.css'
+
 import usePresale from "../../hooks/usePresale";
 import ReverseTimer from './timer';
 import Refferalbtn from '../Home/refferalbtn'
-
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import '../componentCss/modal.css'
+import '../componentCss/responsive.css'
+// import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { WalletSelect } from '../WalletSelect';
+import { PRESALE_PROGRAM_PUBKEY } from "../../hooks/constants";
 
 
 const now = 0;
@@ -32,8 +35,7 @@ const Home = () => {
 	const [refLink, setRefLink] = useState('');
 	const [isLoggedIn, setisLoggedIn] = useState(false);
 	const [solBalance, setSolBalance] = useState(0);
-	const { buyToken, balance, price_per_token, buyAmount } = usePresale();
-
+	const { buyToken, balance, price_per_token, buyAmount, totalBuyAmount, entireBuyAmount } = usePresale();
 	const onBuyToken = async () => {
 		if (solBalance < 0.1) {
 			toast.warning("Please check SOL balance again.");
@@ -41,6 +43,12 @@ const Home = () => {
 		}
 		buyToken(solBalance, solBalance * price_per_token);
 	};
+
+	const coinTicker = require('coin-ticker');
+		coinTicker('binance', 'SOL_USD')
+		.then((tick) => {
+			console.log("tick", tick.last)
+    })
 
 
 	useEffect(() => {
@@ -51,15 +59,16 @@ const Home = () => {
 	}, [loginData]);
 
 	useEffect(() => {
+		// console.log(_useWallet.wallets)
 		if (_useWallet.connected) {
 			console.log({ _useWallet, connected: _useWallet.connected, publicKey: _useWallet?.publicKey?.toBase58() });
 			loginUser(_useWallet?.publicKey?.toBase58())
 		} else {
+			setisLoggedIn(false);
 			console.log("_useWallet : disconnect")
 			Cookies.remove('bitmeUserLogin');
-			setisLoggedIn(false);
 		}
-	}, [_useWallet])
+	}, [_useWallet, isLoggedIn])
 
 	const loginUser = async (publicKey) => {
 		try {
@@ -67,7 +76,6 @@ const Home = () => {
 				walletAddress: publicKey
 			}
 			let res = await authenticateUserAction(Data);
-			console.log({ res })
 			if (res.success) {
 				// toast.success('Connected successfully!')
 				Cookies.set('bitmeUserLogin', JSON.stringify(res.data));
@@ -189,7 +197,7 @@ const Home = () => {
 
 	return (
 		<>
-			<Header />
+			<Header isLoggedIn={isLoggedIn} setisLoggedIn={setisLoggedIn} />
 			<Toaster />
 			<div className='main'>
 				<section className='presale py-5'>
@@ -198,42 +206,43 @@ const Home = () => {
 
 						<div className='mb-3'>
 							<h6 className='text-uppercase text-primary mb-0 '>bitme presale details</h6>
-
-
 						</div>
 						<Row className='align-items-end'>
 							<Col xl={12} className='referralBtn mobileShow'>
 								<div >
-									<Button variant='light-primary' className='messageBtn mb-3' onClick={handleShow}>
+									<Button variant='light-primary' className='messageBtn mb-3'>
 										<Refferalbtn />
 									</Button>
 								</div>
 							</Col>
-							<Col xl={9} md={8} sm={8} xs={6}>
+							</Row>
+						<div className='align-items-end d-flex justify-content-between'>
+							
+							<div >
 								<div className='referralBtn d-xl-flex'>
 									<div>
-										<Button variant='light-primary' className='me-2 btn-sm px-4 mb-3' onClick={handleShow}>
+										<Button variant='light-primary' className='me-2 btn-sm px-4 mb-3 refer_and_earn' onClick={handleShow}>
 
 											REFER AND EARN</Button>
 									</div>
 									<div className='desktopShow'>
-										<Button variant='light-primary' className='messageBtn mb-3'>
+										<Button variant='light-primary' className='messageBtn mb-3 norefInfo'>
 											<Refferalbtn />
 										</Button>
 									</div>
 
 
 								</div>
-							</Col>
-							<Col xl={3} md={4} sm={4} xs={6}>
-								<div className='text-end mb-3'>
+							</div>
+							<div xl={3} md={4} sm={4} xs={6}>
+								<div className='text-end mb-3 how_to_buy'>
 
 									{/* <Button onClick={() => redirectTo('https://t.me/Bitme_ai')} variant='light-primary' className='me-3 btn-sm px-4 mb-4'>JOIN COMMUNITY</Button> */}
-									<a href='https://docs.bitme.ai/bitme/presale-of-usdbitme#bitme-presale-quick-start-guide' target="_blank" className='text-uppercase text-primary me-3 bg-transparent text-decoration-underline border-0 px-0 mb-3'>how to buy?</a>
+									<a href='https://docs.bitme.ai/bitme/presale-of-usdbitme#bitme-presale-quick-start-guide' target="_blank" className='text-uppercase me-3 bg-transparent text-decoration-underline border-0 px-0 mb-3 howtobuy'>how to buy?</a>
 								</div>
-							</Col>
+							</div>
 
-						</Row>
+						</div>
 						{/* <div className='d-lg-flex justify-content-between align-items-center referralBtn'>
 
 							<div>
@@ -260,7 +269,7 @@ const Home = () => {
 						</div> */}
 						<div>
 							<Row>
-								<Col lg={8} className='mb-2 pe-lg-2'>
+								<Col xl={8} className='mb-2 pe-xl-2'>
 									<Card className='p-2'>
 
 										<div className='card-style1 me-2 w-100 mb-2'>
@@ -275,7 +284,7 @@ const Home = () => {
 											<Card className='p-2'>
 												<div className='mb-3'>
 													<label className="small text-uppercase text-light-primary">token address</label>
-													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'> <a style={{ color: '#643025' }} target="_blank" href="https://solscan.io/token/ARwjDQRry2CmF2RPKL19ZRmAwg852ZGQWtLMQ3jRtKKt"> ARwjDQRry2CmF2RPKL19ZRmAwg852ZGQWtLMQ3jRtKKt</a></h6>
+													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'> <a style={{ color: '#643025' }} target="_blank" href={`https://solscan.io/token/${PRESALE_PROGRAM_PUBKEY.toString()}`}> {PRESALE_PROGRAM_PUBKEY.toString()} </a></h6>
 												</div>
 												<div className='mb-3'>
 													<label className="small text-uppercase text-light-primary">token symbol</label>
@@ -291,15 +300,15 @@ const Home = () => {
 												</div>
 												<div className='mb-3'>
 													<label className="small text-uppercase text-light-primary">start / end price</label>
-													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>0.02 usd / 0.10 USD</h6>
+													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>7500 BITME per SOL / 1500 BITME per SOL</h6>
 												</div>
 												<div className='mb-3'>
 													<label className="small text-uppercase text-light-primary">Start time</label>
-													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>2024/05/15 08:00 (Local time)</h6>
+													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>2024/05/15 08:00 </h6>
 												</div>
 												<div className='mb-3'>
 													<label className="small text-uppercase text-light-primary">end time</label>
-													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>2024/05/20 08:00 (local time)</h6>
+													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>2024/05/20 08:00 </h6>
 												</div>
 												<div className=''>
 													<label className="small text-uppercase text-light-primary">duration</label>
@@ -314,20 +323,20 @@ const Home = () => {
 
 								</Col>
 
-								<Col lg={4} className='ps-lg-0'>
+								<Col xl={4} className='ps-xl-0'>
 									<div className='formBox'>
 										<Card className='p-2 pb-0 mb-2'>
 
 											<Row>
-												<Col lg={6} className='mb-2 pe-lg-1'>
+												<Col lg={6} className='mb-2 pe-xl-1'>
 													<div className='card-style1 '>
 														<Card className='p-2'>
-															<label className="small text-uppercase text-light-primary">Start</label>
+															<label className="small text-uppercase text-light-primary">Start In</label>
 															<ReverseTimer />
 														</Card>
 													</div>
 												</Col>
-												<Col lg={6} className='mb-2 ps-lg-1'>
+												<Col lg={6} className='mb-2 ps-xl-1'>
 													<div className='card-style1 '>
 														<Card className='p-2'>
 															<label className="small text-uppercase text-light-primary">Ending in</label>
@@ -335,7 +344,7 @@ const Home = () => {
 														</Card>
 													</div>
 												</Col>
-												<Col lg={6} className='mb-2 pe-lg-1'>
+												<Col lg={6} className='mb-2 pe-xl-1'>
 													<div className='card-style1'>
 														<Card className='p-2'>
 															<label className="small text-uppercase text-light-primary">launch token</label>
@@ -343,7 +352,7 @@ const Home = () => {
 														</Card>
 													</div>
 												</Col>
-												<Col lg={6} className='mb-2 ps-lg-1'>
+												<Col lg={6} className='mb-2 ps-xl-1'>
 													<div className='card-style1'>
 														<Card className='p-2'>
 															<label className="small text-uppercase text-light-primary">STATUS</label>
@@ -396,8 +405,8 @@ const Home = () => {
 														<Card className='p-2'>
 															<label className="small text-uppercase text-light-primary">Tokens Released</label>
 															<div className='d-flex justify-content-between mb-2'>
-																<h6 className='mb-0 fw-bold d-flex align-items-center'>0 / 500 000 000 BITME <img src={`${config.BASE_URL}assets/images/bitme.png`} width={`16px`} className='ms-1' /></h6>
-																<h6 className='mb-0 fw-bold'>0%</h6>
+																<h6 className='mb-0 fw-bold d-flex align-items-center'>{totalBuyAmount} / 500 000 000 BITME <img src={`${config.BASE_URL}assets/images/bitme.png`} width={`16px`} className='ms-1' /></h6>
+																<h6 className='mb-0 fw-bold'>{totalBuyAmount / (5 * 10**6) }%</h6>
 															</div>
 															<ProgressBar now={now} label={`${now}%`} />
 														</Card>
@@ -406,7 +415,10 @@ const Home = () => {
 											</Row>
 
 										</Card>
-										<Card className='p-2  mb-2'>
+										<Card className='p-2  mb-2 position-relative'>
+											{/* {isLoggedIn &&
+												<div className='boxOverlay'></div>
+											} */}
 
 											<Row>
 												{/* <Col lg={6} className='mb-2'>
@@ -444,37 +456,42 @@ const Home = () => {
 														</Card>
 													</div>
 												</Col> */}
-												{/* <div className='connect_block'>
-													<Col lg={12} className=' mb-2'>
-														<Button disabled className='text-uppercase w-100'>Connect Solana</Button>
-
-													</Col>
-													<Col lg={12} className=''>
-														<div className='mb-0 small text-uppercase fw-medium mb-2 text-center lh-sm'>
-															You need to connect your external wallet that contains your
-															Solana, such as Phantom Wallet or Solflare, to continue.
-														</div>
-														<div className='card-style1'>
-															<Card className='p-2'>
-																<div className='small fw-medium text-uppercase text-center lh-sm'>For more information on the presale, the Bitme
-																	project, or how its services work, please
-																	consult the <a href='#' className='text-primary'>documentation</a> section.</div>
-															</Card>
-														</div>
-													</Col>
-												</div> */}
-												<div className='payment_block'>
-													<Col lg={12} className='mb-2'>
-														<div className='card-style1'>
-															<Card className='p-2'>
-																<div className='d-flex justify-content-between mb-1'>
-																	<label className="small text-uppercase text-light-primary">You Pay</label>
-																</div>
-																<Form.Group className=" position-relative mb-1" controlId="formBasicEmail">
-																	<Form.Control type="number" value={Number(solBalance).toString()} onChange={(e) => {
-																		setSolBalance(Number(e.target.value));
-																	}} className='border-0 rounded-2' />
-																	{/* <input
+												{!isLoggedIn &&
+													<div className='connect_block'>
+														<Col lg={12} className=' mb-2'>
+															
+															<div className='headbtn wltBtn'>
+																<WalletSelect  />
+															</div>
+														</Col>
+														<Col lg={12} className=''>
+															<div className='mb-0 small text-uppercase fw-medium mb-2 text-center lh-sm'>
+																You need to connect your external wallet that contains your
+																Solana, such as Phantom Wallet or Solflare, to continue.
+															</div>
+															<div className='card-style1'>
+																<Card className='p-2'>
+																	<div className='small fw-medium text-uppercase text-center lh-sm'>For more information on the presale, the Bitme
+																		project, or how its services work, please
+																		consult the <a target='__blank' href='https://docs.bitme.ai/' className='text-primary'>documentation</a> section.</div>
+																</Card>
+															</div>
+														</Col>
+													</div>
+												}
+												{isLoggedIn &&
+													<div className='payment_block sameHeight'>
+														<Col lg={12} className='mb-2'>
+															<div className='card-style1'>
+																<Card className='p-2'>
+																	<div className='d-flex justify-content-between mb-1'>
+																		<label className="small text-uppercase text-light-primary">You Pay</label>
+																	</div>
+																	<Form.Group className=" position-relative mb-1" controlId="formBasicEmail">
+																		<Form.Control type="number" value={Number(solBalance).toString()} onChange={(e) => {
+																			setSolBalance(Number(e.target.value));
+																		}} className='border-0 rounded-2' />
+																		{/* <input
 																		type="number"
 																		value={Number(solBalance).toString()}
 																		onChange={(e) => {
@@ -482,52 +499,53 @@ const Home = () => {
 																		}}
 																		className='border-0 rounded-2'
 																	/> */}
-																	<h6 className='mb-0 fw-bold d-flex align-items-center position-absolute copybtn bg-transparent me-2'>SOL<img src={`${config.BASE_URL}assets/images/solana.png`} width={`16px`} className='ms-1' /></h6>
-																</Form.Group>
-																<div className='d-flex justify-content-between mb-1 px-2'>
-																	<label className="small text-uppercase text-light-primary">Max</label>
-																	<label className="small text-uppercase text-light-primary">Balance {(Number(balance) / 10 ** 9).toFixed(2)}</label>
-																</div>
+																		<h6 className='mb-0 fw-bold d-flex align-items-center position-absolute copybtn bg-transparent me-2'>SOL<img src={`${config.BASE_URL}assets/images/solana.png`} width={`16px`} className='ms-1' /></h6>
+																	</Form.Group>
+																	<div className='d-flex justify-content-between mb-1 px-2'>
+																		<label className="small text-uppercase text-light-primary">Max</label>
+																		<label className="small text-uppercase text-light-primary">Balance {(Number(balance) / 10 ** 9).toFixed(2)}</label>
+																	</div>
 
-															</Card>
-														</div>
-													</Col>
-													<Col lg={12} className='mb-2'>
-														<div className='card-style1'>
-															<Card className='p-2'>
-																<div className='d-flex justify-content-between mb-1'>
-																	<label className="small text-uppercase text-light-primary">You Get</label>
-																</div>
-																<Form.Group className=" position-relative mb-1" controlId="formBasicEmail">
-																	<Form.Control type="number" value={Number(solBalance * price_per_token).toFixed(2)} className='border-0 rounded-2' />
-																	{/* <input
+																</Card>
+															</div>
+														</Col>
+														<Col lg={12} className='mb-2'>
+															<div className='card-style1'>
+																<Card className='p-2'>
+																	<div className='d-flex justify-content-between mb-1'>
+																		<label className="small text-uppercase text-light-primary">You Get</label>
+																	</div>
+																	<Form.Group className=" position-relative mb-1" controlId="formBasicEmail">
+																		<Form.Control type="number" value={Number(solBalance * price_per_token).toFixed(2)} className='border-0 rounded-2' />
+																		{/* <input
 																		value={Number(solBalance * price_per_token).toFixed(2)}
 																		className='border-0 rounded-2'
 																	/> */}
-																	<h6 className='mb-0 fw-bold d-flex align-items-center position-absolute copybtn bg-transparent me-2'>BITME<img src={`${config.BASE_URL}assets/images/bitme.png`} width={`16px`} className='ms-1' /></h6>
-																</Form.Group>
-																<div className='d-flex justify-content-between mb-1 px-2'>
-																	<label className="small text-uppercase text-light-primary">&nbsp;</label>
-																	<label className="small text-uppercase text-light-primary">Balance {Number(buyAmount) / 10 ** 9}</label>
-																</div>
+																		<h6 className='mb-0 fw-bold d-flex align-items-center position-absolute copybtn bg-transparent me-2'>BITME<img src={`${config.BASE_URL}assets/images/bitme.png`} width={`16px`} className='ms-1' /></h6>
+																	</Form.Group>
+																	<div className='d-flex justify-content-between mb-1 px-2'>
+																		<label className="small text-uppercase text-light-primary">&nbsp;</label>
+																		<label className="small text-uppercase text-light-primary">Balance {Number(buyAmount) / 10 ** 9}</label>
+																	</div>
 
-															</Card>
-														</div>
-													</Col>
-													<Col lg={12} className=''>
-														<Button
-															className='text-uppercase w-100 mb-2'
-															onClick={onBuyToken}
-														>
-															BUY
-														</Button>
-														<div className='text-uppercase text-center fw-medium lh-sm xs-small'>
-															by clicking confirm, you agree to our terms and conditions
-														</div>
+																</Card>
+															</div>
+														</Col>
+														<Col lg={12} className=''>
+															<Button
+																className='text-uppercase w-100 mb-2'
+																onClick={onBuyToken}
+															>
+																Confirm
+															</Button>
+															<div className='text-uppercase text-center fw-medium lh-sm xs-small'>
+																by clicking confirm, you agree to our terms and conditions
+															</div>
 
-													</Col>
+														</Col>
 
-												</div>
+													</div>
+												}
 												{/* <div className='redeem_block'>
 
 													<Col lg={12} className='mb-2'>
@@ -565,34 +583,34 @@ const Home = () => {
 						</div>
 						<div >
 							<Row>
-								<Col lg={12} className='mb-2 pe-lg-2'>
-									<Card className='p-2'>
-										<div className='d-lg-flex'>
-											<div className='card-style1 me-2 mb-2 w-100'>
-												<Card className='p-2 pb-0 price-detail-card'>
+								<Col lg={12} className=' pe-xl-2'>
+									<Card className='p-2 mb-2'>
+										<div className='d-xl-flex'>
+											<div className='card-style1 me-2 w-100'>
+												<Card className='p-2 pb-0 mb-2 price-detail-card'>
 													<Row>
-														<Col lg={6} md={6} className='mb-2'>
+														<Col xl={6} md={6} className='mb-2'>
 															<div className='me-2'>
 																<span className='text-light-primary text-uppercase small fw-medium'>actual price</span>
-																<h6 className='text-primary'>$0.02 (0.00004 SOL)</h6>
+																<h6 className='text-primary fw-bold'>{price_per_token / 10} BITME / {1 / 10} SOL</h6>
 															</div>
 														</Col>
-														<Col lg={6} md={6} className='mb-2'>
+														<Col xl={6} md={6} className='mb-2'>
 															<div className='me-2'>
 																<span className='text-light-primary text-uppercase small fw-medium'>funds raised</span>
-																<h6 className='text-primary'>$0.00 (0.0 sol)</h6>
+																<h6 className='text-primary fw-bold'>{entireBuyAmount} SOL</h6>
 															</div>
 														</Col>
-														<Col lg={6} md={6} className='mb-2'>
+														<Col xl={6} md={6} className='mb-2'>
 															<div className='me-2'>
 																<span className='text-light-primary text-uppercase small fw-medium'>bitme sold / available</span>
-																<h6 className='text-primary'>0 / 500 000 000</h6>
+																<h6 className='text-primary mb-0 fw-bold'>{totalBuyAmount} / 500 000 000</h6>
 															</div>
 														</Col>
-														<Col lg={6} md={6} className='mb-2'>
+														<Col xl={6} md={6} className='mb-2'>
 															<div className=''>
 																<span className='text-light-primary text-uppercase small fw-medium'>liquidity pool</span>
-																<h6 className='text-primary'>$0.00 (0.0 sol)</h6>
+																<h6 className='text-primary mb-0 fw-bold'>$0.00 (0.0 SOL)</h6>
 															</div>
 														</Col>
 													</Row>
@@ -662,7 +680,7 @@ const Home = () => {
 										</Card>
 									</div>
 								</Col> */}
-								<Col lg={12} className='mb-2 pe-lg-2'>
+								<Col lg={12} className='mb-2 pe-xl-2'>
 									<Card className='p-2'>
 
 										<div className='card-style1 me-2 w-100 mb-2'>
@@ -706,7 +724,7 @@ const Home = () => {
 							<h5 className='mb-4'>Connect your wallet to generate your
 								unique referral link for the Bitme</h5>
 							<div className='referral_link border border-2 p-4 rounded-4 border-primary'>
-								<div className='d-md-flex align-items-center'>
+								<div className='d-flex align-items-center'>
 									<h1 className='mb-0 me-3'>50%</h1>
 									{/* <div class="v-line mx-3"></div> */}
 									<div className='text-start mb-0 small'>Share your unique referral link and earn up to 50% of the redeem fees generated.</div>
@@ -716,9 +734,10 @@ const Home = () => {
 
 						</div>
 						<br />
-						<div className='headbtn wltBtn modelBtn' onClick={() => setShow(false)} >
+						<div className='headbtn wltBtn modelBtn' >
+							{/*  onClick={() => setShow(false)} */}
 							<center>
-								<WalletMultiButton />
+							<WalletSelect  />
 							</center>
 						</div>
 						{/* <WallletConnect isLoggedIn={isLoggedIn} setisLoggedIn={setisLoggedIn}></WallletConnect> */}
@@ -738,14 +757,14 @@ const Home = () => {
 									<Form.Control type="text" value={refLink.slice(0, 40) + '...'} readOnly className='bg-white border-0' />
 									<Button variant='default' onClick={copyToClipboard} className='position-absolute copybtn bg-transparent text-primary border-0'><FaRegClone /></Button>
 								</Form.Group>
-								<div className='d-md-flex align-items-center'>
+								<div className='d-flex align-items-center'>
 									<h1 className='mb-0 me-3'>50%</h1>
 									{/* <div class="v-line mx-3"></div> */}
 									<div className='text-start mb-0 small'>Share your unique referral link and earn up to 50% of the redeem fees generated.</div>
 								</div>
 
 							</div>
-							<p className='py-3 mb-0'>Download promotional image</p>
+							<p className='py-3 mb-0 promotnalText'><a href={`/assets/images/bit-ref-link.png`} download >Download promotional image</a></p>
 						</div>
 					</Modal.Body>
 				</Modal>

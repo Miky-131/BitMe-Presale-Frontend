@@ -54,19 +54,68 @@
   font-family: DM Sans,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
   font-size: 16px;
   font-weight: 600;
-  background-color: #653025;
+  background-color: #846359;
   height: 35px;
   line-height: 35px;
-  padding: 0 24px;
+  justify-content: center;
+  padding: 0 0px;
   width: 100%;
 }
+header .headbtn.wltBtn .wallet-adapter-button {
+  padding: 0 24px; 
+  border-radius: 0.25rem;
+ 
+}
+.headbtn.wltBtn .wallet-adapter-button {
+  border-radius: 0.25;
+  padding: 0.5em 1em;
+}
+.wallet-adapter-dropdown {
+  display: block!important;
+}
+.referral_earn .headbtn.wltBtn .wallet-adapter-button {
+  border-radius: 10px;
+  padding: 0.5em 1em;
+}
+.wallet-adapter-modal.wallet-adapter-modal-fade-in {
+  z-index: 1111;
+}
 .wltBtn .wallet-adapter-button:not([disabled]):hover {
-  background-color: #846359;
+  background-color: #653025;
 }
 .modelBtn .wallet-adapter-button{
-  padding-left: 165px;
+  padding-left: 0;
+  justify-content: center;
 }
 
 .modelBtn .wallet-adapter-dropdown{
   width: 100%;
+}
+.wallet-adapter-dropdown {
+  position: relative;
+  display: block;
+}
+.modal-open,.modal {
+  padding-right: 0px!important;
+}
+
+.norefInfo{
+  pointer-events: none;
+}
+
+
+/* Css by AJ */
+.promotnalText a{
+  color: #846359;
+  text-decoration: none;
+  font-weight: 500;
+}
+.promotnalText a:hover{
+  font-weight: 500;
+  color: #643025;
+}
+
+
+.how_to_buy{
+
 }

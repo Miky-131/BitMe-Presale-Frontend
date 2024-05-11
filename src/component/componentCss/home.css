@@ -13,7 +13,19 @@ img, svg{
 .xs-small{
     font-size: 12px;
 }
+.formBox .xs-small{
+    font-size: 11px;
+}
+
 /* --------------- */
+.how_to_buy a{
+    color: #846359;
+    font-weight: 500;
+}
+.how_to_buy a:hover {
+    font-weight: 500;
+    color: #643025;
+}
 .copybtn {
     top: 0;
     right: 0;
@@ -22,27 +34,7 @@ img, svg{
     align-items: center;
 }
 
-.referral_link .form-control{
-    height: 48px;
-}
-.referral_link .form-control:focus {
-    border-color: none;
-    box-shadow: none;
-  }
-  
-.v-line {
-    width: 6px;
-    height: 40px;
-    background: #fff;
-}
 
-.modal-backdrop
-{
-    opacity:0.8 !important;
-}
-.refText{
-    font-size: 12px;
-}
 /* --------- */
 .presale label {
     font-weight: 500;
@@ -87,7 +79,7 @@ body .hlUwZf div:first-child {
     min-height: 48px;
 }
 .refText {
-    padding: 2px 10px;
+    padding: 3px 10px;
     border-radius: 4px;
     display: block;
     text-transform: uppercase;
@@ -99,8 +91,12 @@ body .hlUwZf div:first-child {
     padding: 2px!important;
     min-height: 30.81px;
 }
+.messageBtn {
+    padding: 2px!important;
+    min-height: 30px;
+}
 .price-detail-card {
-    min-height: 145px;
+    min-height: 123px;
 }
 .progress, .progress-stacked {
 --bs-secondary-bg:#b8a094;
@@ -126,7 +122,18 @@ body .hlUwZf div:first-child {
     background-color: #b30000!important;
 }
 .sameHeight {
-    min-height: 476px;
+    min-height: 301px;
+}
+.boxOverlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: 0.375rem;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    opacity: 40%;
+    background: #6a392fc9;
 }
 .mobileShow{
     display: none;
@@ -134,6 +141,8 @@ body .hlUwZf div:first-child {
 .desktopShow{
     display: block;
 }
+
+/* --------------- */
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -142,38 +151,3 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
-
-
-@media only screen and (max-width: 1199px) {
-    body .desktopShow {
-        display: none;
-    }
-    body .mobileShow {
-        display: block;
-    }
-    .referralBtn{
-        display: flex;
-        -webkit-flex-direction: column-reverse;
-        flex-direction: column-reverse;
-    }
-}
-
-@media only screen and (max-width: 991px) {
-    .refText {
-        display: block;
-        width: 100%;
-        margin-left: 0!important;
-    }
-    
-  }
-
-  @media only screen and (max-width: 320px) {
-    .modelBtn .wallet-adapter-button{
-        padding-left: 35px;
-      }
-      
-      .modelBtn .wallet-adapter-dropdown{
-        width: 100%;
-      }
-    
-  }

@@ -62,7 +62,7 @@ export default function usePresale() {
           setStageNumber(info.stage)
           setStartTime(info.startTime);
           setEndTime(info.endTime);
-          setTotalBuyAmount(Number(info.soldTokenAmount));
+          setTotalBuyAmount(Number(info.soldTokenAmount) / 10 ** 9);
           setEntireBuyAmount(Number(info.soldQuoteAmount) / 10 ** 9);
           setTotalHardCap(Number(info.hardcapAmount) / 10 ** 9);
           setTotalSoftCap(Number(info.softcapAmount) / 10 ** 9);
@@ -179,6 +179,8 @@ export default function usePresale() {
     buyToken,
     balance,
     price_per_token,
-    buyAmount
+    buyAmount,
+    entireBuyAmount,
+    totalBuyAmount
   }
 }

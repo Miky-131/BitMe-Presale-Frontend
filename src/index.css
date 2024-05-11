@@ -2,6 +2,7 @@ body {
   margin: 0;
   --bs-body-bg: #fff7e9;
   --bs-body-color: #643025;
+  overflow-x: hidden!important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;

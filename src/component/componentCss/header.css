@@ -4,6 +4,9 @@
     box-shadow: 0 6px 14px #0000001a;
     background-color: var(--bs-white);
 }
+.header .navbar-brand{
+    --bs-navbar-brand-padding-y: 1rem;
+}
 body .navbar {
     --bs-navbar-padding-y: 0rem;
 }
@@ -11,6 +14,7 @@ body .navbar {
     --bs-navbar-active-color:#fff;
     background-color: var(--bs-nav-link-color);
 }
+
 .nav-link {
     --bs-nav-link-padding-y:1.5rem;
 }
@@ -19,7 +23,31 @@ body .navbar {
     --bs-nav-link-color:var(--bs-light-primary);
     /* background: var(--bs-primary); */
 }
+.nav-link:focus, .nav-link:hover {
+    --bs-nav-link-hover-color:#fff;
+    background-color: var(--bs-nav-link-color);
+}
+header .navbar-toggler:focus {
+    --bs-navbar-toggler-focus-width:none;
+}
+.social-link a {
+    color: #846359;
+}
+.social-link a:hover {
+    color: #653025;
+}
+
+
+
 @media (min-width: 1200px) {
 .navbar-expand-xl .navbar-nav .nav-link {
     --bs-navbar-nav-link-padding-x:30px;
+}
+}
+@media (max-width: 1200px) {
+    .referral_earn {
+        padding-left: 0px!important;
+    }
+.social-link {
+    padding: 24px 16px;
 }}

@@ -1,0 +1,97 @@
+@media (min-width: 992px) {
+    body .container, body .container-lg,  body .container-md, body .container-sm {
+    max-width: 720px;
+}}
+@media (min-width: 1200px) {
+    body .container, body .container-lg, body .container-md, body .container-sm, body .container-xl, body .container-xxl {
+        max-width: 1200px;
+    }
+}
+@media (min-width: 1400px) {
+body .container, body .container-lg, body .container-md, body .container-sm, body .container-xl, body .container-xxl {
+    max-width: 1200px;
+}
+}
+
+
+@media only screen and (max-width: 1199px) {
+    body .desktopShow {
+        display: none;
+    }
+    body .mobileShow {
+        display: block;
+    }
+    .referralBtn{
+        display: flex;
+        -webkit-flex-direction: column-reverse;
+        flex-direction: column-reverse;
+    }
+    body .navbar-nav {
+        --bs-nav-link-padding-x: 1rem;
+    }
+    .header .headbtn.wltBtn {
+        margin-bottom: 2rem;
+    }
+    .messageBtn{
+        pointer-events: none;
+    }
+}
+
+@media only screen and (max-width: 991px) {
+    .refText {
+        display: block;
+        width: 100%;
+        margin-left: 0!important;
+    }
+    .messageBtn{
+        pointer-events: none;
+    }
+    
+  }
+  @media only screen and (max-width: 500px) {
+    body .referral_earn .modal-dialog {
+        position: relative;
+        width: calc(100% - 64px)!important;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .messageBtn{
+        pointer-events: none;
+    }
+
+  }
+  @media (min-width: 500px) {
+    .modal-dialog {
+        --bs-modal-width:500px;
+    }
+    .modal-content {
+        width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .messageBtn{
+        pointer-events: none;
+    }
+}
+
+  @media only screen and (max-width: 320px) {
+    .referralBtn .refer_and_earn {
+        padding-left: 10px!important;
+        padding-right: 10px!important;
+    }
+    .modelBtn .wallet-adapter-button{
+        padding-left: 0px;
+        justify-content: center;
+      }
+      .wltBtn .wallet-adapter-button {
+        padding: 0 0px;
+    }
+      
+      .modelBtn .wallet-adapter-dropdown{
+        width: 100%;
+      }
+    
+.messageBtn{
+    pointer-events: none;
+}
+  }

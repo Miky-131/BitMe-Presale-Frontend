@@ -11,8 +11,23 @@ function ReverseTimer() {
     }, []);
 
     const updateTimeLeft = () => {
+        // const currentDate = new Date();
+        // console.log(currentDate)
+        // var newDateObj = new Date();
+        // newDateObj.setTime(currentDate.getTime() + (14 * 60 * 60 * 1000)); // 14 hours added as client want
+        // console.log(newDateObj)
+        // const targetDate = new Date("Fri May 11 2024 08:00:00 GMT-0400"); // May 15, 2024, 08:00 AM in UTC
+        // targetDate.setTime(targetDate.getTime() + (14 * 60 * 60 * 1000));
+        // const difference = targetDate - newDateObj;
+
+        // const currentDate = new Date();
+        // const targetDate = new Date("Fri May 15 2024 08:00:00"); // May 15, 2024, 08:00 AM in UTC
+
         const currentDate = new Date();
-        const targetDate = new Date("2024-05-15T00:00:00Z"); // May 15, 2024, in UTC
+        currentDate.setTime(currentDate.getTime() + (14 * 60 * 60 * 1000));
+        const targetDate = new Date("Fri May 15 2024 08:00:00"); // May 15, 2024, 08:00 AM in GMT
+        targetDate.setTime(targetDate.getTime() + (14 * 60 * 60 * 1000));
+        
         const difference = targetDate - currentDate;
 
         const secondsLeft = Math.floor(difference / 1000);
