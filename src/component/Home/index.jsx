@@ -14,7 +14,6 @@ import { authenticateUserAction } from '../../coreFile/action';
 import { Navigate, useParams } from "react-router-dom";
 
 import usePresale from "../../hooks/usePresale";
-import useHistory from "../../hooks/useHistroy";
 import ReverseTimer from './timer';
 import Refferalbtn from '../Home/refferalbtn'
 import '../componentCss/modal.css'
@@ -22,6 +21,7 @@ import '../componentCss/responsive.css'
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletSelect } from '../WalletSelect';
 import { PRESALE_PROGRAM_PUBKEY } from "../../hooks/constants";
+import useSolPrice from '../../hooks/useSolPrice';
 
 
 const now = 0;
@@ -36,7 +36,6 @@ const Home = () => {
 	const [isLoggedIn, setisLoggedIn] = useState(false);
 	const [solBalance, setSolBalance] = useState(0);
 	const { buyToken, balance, price_per_token, buyAmount, totalBuyAmount, entireBuyAmount } = usePresale();
-	const {authToken}  = useHistory();
 	const referAddress = "8tFunKMZagDsCRgKusmtdNPcPW2ReEzr7RvuV5hK6kbD";
 	const onBuyToken = async () => {
 		if (solBalance < 0.1) {
@@ -46,12 +45,21 @@ const Home = () => {
 		buyToken(solBalance, referAddress);
 	};
 
-	const coinTicker = require('coin-ticker');
-		coinTicker('binance', 'SOL_USD')
-		.then((tick) => {
-			console.log("tick", tick.last)
-    })
-	console.log("encodeadd", encAddress)
+		var url = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
+	
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", url);
+	
+		xhr.setRequestHeader("accept", "application/json");
+	
+		xhr.onreadystatechange = function () {
+			if (xhr.readyState === 4) {
+				console.log(xhr.status);
+				console.log(xhr.responseText);
+			}
+		};
+	
+		console.log("sdfsdf", xhr.send());
 
 	useEffect(() => {
 		if (loginData?.walletAddress) {
@@ -216,9 +224,9 @@ const Home = () => {
 									</Button>
 								</div>
 							</Col>
-							</Row>
+						</Row>
 						<div className='align-items-end d-flex justify-content-between'>
-							
+
 							<div >
 								<div className='referralBtn d-xl-flex'>
 									<div>
@@ -407,7 +415,7 @@ const Home = () => {
 															<label className="small text-uppercase text-light-primary">Tokens Released</label>
 															<div className='d-flex justify-content-between mb-2'>
 																<h6 className='mb-0 fw-bold d-flex align-items-center'>{totalBuyAmount} / 500 000 000 BITME <img src={`${config.BASE_URL}assets/images/bitme.png`} width={`16px`} className='ms-1' /></h6>
-																<h6 className='mb-0 fw-bold'>{totalBuyAmount / (5 * 10**6) }%</h6>
+																<h6 className='mb-0 fw-bold'>{totalBuyAmount / (5 * 10 ** 6)}%</h6>
 															</div>
 															<ProgressBar now={now} label={`${now}%`} />
 														</Card>
@@ -460,9 +468,9 @@ const Home = () => {
 												{!isLoggedIn &&
 													<div className='connect_block'>
 														<Col lg={12} className=' mb-2'>
-															
+
 															<div className='headbtn wltBtn'>
-																<WalletSelect  />
+																<WalletSelect />
 															</div>
 														</Col>
 														<Col lg={12} className=''>
@@ -611,7 +619,7 @@ const Home = () => {
 														<Col xl={6} md={6} className='mb-2'>
 															<div className=''>
 																<span className='text-light-primary text-uppercase small fw-medium'>liquidity pool</span>
-																<h6 className='text-primary mb-0 fw-bold'>$0.00 (0.0 SOL)</h6>
+																<h6 className='text-primary mb-0 fw-bold'>${entireBuyAmount} ({entireBuyAmount} SOL)</h6>
 															</div>
 														</Col>
 													</Row>
@@ -738,7 +746,7 @@ const Home = () => {
 						<div className='headbtn wltBtn modelBtn' >
 							{/*  onClick={() => setShow(false)} */}
 							<center>
-							<WalletSelect  />
+								<WalletSelect />
 							</center>
 						</div>
 						{/* <WallletConnect isLoggedIn={isLoggedIn} setisLoggedIn={setisLoggedIn}></WallletConnect> */}
