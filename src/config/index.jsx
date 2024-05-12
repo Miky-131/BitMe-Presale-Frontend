@@ -5,7 +5,7 @@ const config = {
     // API_URL : 'http://localhost:8182/api',  // Localhost
 
     //======= Esp Server =======//
-    BASE_URL: '/bitme/', 
+    BASE_URL: '/', 
     API_URL : 'https://espsofttech.org:8182/api',
 
 
