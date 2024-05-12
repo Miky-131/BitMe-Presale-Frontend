@@ -11,14 +11,14 @@ import toast, { Toaster } from 'react-hot-toast';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Cookies from "js-cookie";
 import { authenticateUserAction } from '../../coreFile/action';
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 
 import usePresale from "../../hooks/usePresale";
+import useHistory from "../../hooks/useHistroy";
 import ReverseTimer from './timer';
 import Refferalbtn from '../Home/refferalbtn'
 import '../componentCss/modal.css'
 import '../componentCss/responsive.css'
-// import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletSelect } from '../WalletSelect';
 import { PRESALE_PROGRAM_PUBKEY } from "../../hooks/constants";
@@ -36,12 +36,14 @@ const Home = () => {
 	const [isLoggedIn, setisLoggedIn] = useState(false);
 	const [solBalance, setSolBalance] = useState(0);
 	const { buyToken, balance, price_per_token, buyAmount, totalBuyAmount, entireBuyAmount } = usePresale();
+	const {authToken}  = useHistory();
+	const referAddress = "8tFunKMZagDsCRgKusmtdNPcPW2ReEzr7RvuV5hK6kbD";
 	const onBuyToken = async () => {
 		if (solBalance < 0.1) {
 			toast.warning("Please check SOL balance again.");
 			return;
 		}
-		buyToken(solBalance, solBalance * price_per_token);
+		buyToken(solBalance, referAddress);
 	};
 
 	const coinTicker = require('coin-ticker');
@@ -49,7 +51,7 @@ const Home = () => {
 		.then((tick) => {
 			console.log("tick", tick.last)
     })
-
+	console.log("encodeadd", encAddress)
 
 	useEffect(() => {
 		if (loginData?.walletAddress) {
@@ -61,7 +63,6 @@ const Home = () => {
 	useEffect(() => {
 		// console.log(_useWallet.wallets)
 		if (_useWallet.connected) {
-			console.log({ _useWallet, connected: _useWallet.connected, publicKey: _useWallet?.publicKey?.toBase58() });
 			loginUser(_useWallet?.publicKey?.toBase58())
 		} else {
 			setisLoggedIn(false);

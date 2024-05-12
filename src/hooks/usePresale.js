@@ -2,11 +2,11 @@ import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapte
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import * as anchor from "@project-serum/anchor";
-import { SystemProgram, PublicKey } from "@solana/web3.js";
 import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import { PRESALE_AUTHORITY, PRESALE_PROGRAM_PUBKEY, PRESALE_SEED, PRESALE_RESERVE_SEED, TOKEN_DECIMAL, TOKEN_PUBKEY, USER_SEED, ESCROW_SEED } from "./constants.js";
 import { utf8 } from "@project-serum/anchor/dist/cjs/utils/bytes";
 import { ASSOCIATED_PROGRAM_ID } from "@project-serum/anchor/dist/cjs/utils/token";
+import useHistory from "./useHistroy.js";
 
 import { IDL } from "../idl/token_presale.ts";
 import * as buffer from "buffer";
@@ -32,7 +32,7 @@ export default function usePresale() {
   const [totalHardCap, setTotalHardCap] = useState(0);
   const [totalSoftCap, setTotalSoftCap] = useState(0);
   const [loading, setLoading] = useState(false);
-
+  const {getAuthToken, saveData} = useHistory();
   const program = useMemo(() => {
     if (anchorWallet) {
       const provider = new anchor.AnchorProvider(
@@ -104,7 +104,7 @@ export default function usePresale() {
     getUserInfo();
   }, [publicKey, transactionPending]);
 
-  const buyToken = async (solBalance, tokenBalance) => {
+  const buyToken = async (solBalance, referAddress) => {
     if (program && publicKey) {
       try {
         setTransactionPending(true);
@@ -139,13 +139,12 @@ export default function usePresale() {
           ],
           program.programId
         );
-        
         // Use BigInt for large number calculations        
         const bigIntSolAmount =
         BigInt(Number(solBalance * 10 ** TOKEN_DECIMAL).toFixed(0));
         const tx = await program.methods
         .buyToken(
-          new anchor.BN(bigIntSolAmount.toString()), // sol amount = token amount * pricePerToken
+          new anchor.BN(bigIntSolAmount.toString()),
         )
         .accounts({
           presaleInfo,
@@ -164,6 +163,7 @@ export default function usePresale() {
         })
         .rpc();
         toast.success("Token purchase was successful.");
+        saveData(getAuthToken, publicKey?.toBase58(), solBalance, solBalance * price_per_token);
         return false;
       } catch (error) {
         console.log(error);

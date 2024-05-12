@@ -14,7 +14,6 @@ const CustomWalletConnectButton = ({ _useWallet, isLoggedIn, setisLoggedIn, logi
 
   useEffect(() => {
     if (_useWallet.connected) {
-      console.log({ _useWallet, connected: _useWallet.connected, publicKey: _useWallet?.publicKey?.toBase58() });
       loginUser(_useWallet?.publicKey?.toBase58())
     } else {
       console.log("_useWallet : disconnect")

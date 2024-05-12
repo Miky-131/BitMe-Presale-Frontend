@@ -18,7 +18,6 @@ const Bitdex = () => {
 
 	useEffect(() => {
 		if (_useWallet.connected) {
-			console.log({ _useWallet, connected: _useWallet.connected, publicKey: _useWallet?.publicKey?.toBase58() });
 			loginUser(_useWallet?.publicKey?.toBase58())
 		} else {
 			setisLoggedIn(false);

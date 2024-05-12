@@ -45,7 +45,6 @@ const Header = ({ isLoggedIn, setisLoggedIn }) => {
 
 	useEffect(() => {
 		if (_useWallet.connected) {
-			console.log({ _useWallet, connected: _useWallet.connected, publicKey: _useWallet?.publicKey?.toBase58() });
 			loginUser(_useWallet?.publicKey?.toBase58())
 		} else {
 			console.log("_useWallet : disconnect")
@@ -84,8 +83,8 @@ const Header = ({ isLoggedIn, setisLoggedIn }) => {
 							<Navbar.Toggle aria-controls="basic-navbar-nav" />
 							<Navbar.Collapse id="basic-navbar-nav">
 								<Nav className="mx-auto">
-									<Nav.Link href={`${config.BASE_URL}`} className={(path == "/" || path.match('presale')) && 'active' }>Public Sale</Nav.Link>
-									<Nav.Link href={`${config.BASE_URL}bitdex`} className={ path.match('bitdex') && 'active' } >BitDEX</Nav.Link>
+									<Nav.Link href='/' className={(path == "/" || path.match('presale')) && 'active' }>Public Sale</Nav.Link>
+									<Nav.Link href='/bitdex' className={ path.match('bitdex') && 'active' } >BitDEX</Nav.Link>
 									<Nav.Link target='__blank' href="https://bitme.ai/bitshare">BitSHARE</Nav.Link>
 									<Nav.Link target='__blank' href="https://docs.bitme.ai/">Docs</Nav.Link>
 									{/* <Nav.link>

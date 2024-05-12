@@ -1,6 +1,6 @@
 // import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import config from './config';
 import Home from './component/Home';
 import Bitdex from './component/Bitdex';
@@ -21,8 +21,8 @@ function App() {
 
   const wallets = useMemo(
     () => [
-      new SolflareWalletAdapter(),
       new PhantomWalletAdapter(),
+      new SolflareWalletAdapter(),
       new UnsafeBurnerWalletAdapter(),
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -37,9 +37,9 @@ function App() {
           <WalletModalProvider >
             <BrowserRouter>
               <Routes>
-                <Route path={`${config.BASE_URL}`} element={<Home />} />
-                <Route path={`${config.BASE_URL}bitdex`} element={<Bitdex />} />
-                <Route path={`${config.BASE_URL}presale/app/:encAddress`} element={<Home />} />
+                <Route path='/' element={<Home />} />
+                <Route path='/bitdex' element={<Bitdex />} />
+                <Route path='/:encAddress' element={<Home />} />
               </Routes>
             </BrowserRouter>
           </WalletModalProvider>
