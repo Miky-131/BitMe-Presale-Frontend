@@ -181,6 +181,8 @@ export default function usePresale() {
     price_per_token,
     buyAmount,
     entireBuyAmount,
-    totalBuyAmount
+    totalBuyAmount,
+    startTime,
+    endTime
   }
 }

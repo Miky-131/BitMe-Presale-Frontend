@@ -15,7 +15,7 @@ import { Navigate, useParams } from "react-router-dom";
 
 import usePresale from "../../hooks/usePresale";
 import ReverseTimer from './timer';
-import Refferalbtn from '../Home/refferalbtn'
+import Refferalbtn from './refferalbtn'
 import '../componentCss/modal.css'
 import '../componentCss/responsive.css'
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -35,7 +35,13 @@ const Home = () => {
 	const [refLink, setRefLink] = useState('');
 	const [isLoggedIn, setisLoggedIn] = useState(false);
 	const [solBalance, setSolBalance] = useState(0);
-	const { buyToken, balance, price_per_token, buyAmount, totalBuyAmount, entireBuyAmount } = usePresale();
+	const { buyToken, balance, price_per_token, buyAmount, totalBuyAmount, entireBuyAmount, startTime, endTime } = usePresale();
+	const currentTime = Date.now();
+	var startTimeType = new Date(parseInt(startTime*1000));
+	const startTimeDate = startTimeType.toUTCString();
+	var endTimeType = new Date(parseInt(endTime*1000));
+	const endTimeDate = endTimeType.toUTCString();
+	const duration = (endTime - startTime) / (3600 * 24);
 	const referAddress = "8tFunKMZagDsCRgKusmtdNPcPW2ReEzr7RvuV5hK6kbD";
 	const onBuyToken = async () => {
 		if (solBalance < 0.1) {
@@ -45,21 +51,19 @@ const Home = () => {
 		buyToken(solBalance, referAddress);
 	};
 
-		var url = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
+		// var url = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
 	
-		var xhr = new XMLHttpRequest();
-		xhr.open("GET", url);
+		// var xhr = new XMLHttpRequest();
+		// xhr.open("GET", url);
 	
-		xhr.setRequestHeader("accept", "application/json");
+		// xhr.setRequestHeader("accept", "application/json");
 	
-		xhr.onreadystatechange = function () {
-			if (xhr.readyState === 4) {
-				console.log(xhr.status);
-				console.log(xhr.responseText);
-			}
-		};
-	
-		console.log("sdfsdf", xhr.send());
+		// xhr.onreadystatechange = function () {
+		// 	if (xhr.readyState === 4) {
+		// 		console.log(xhr.status);
+		// 		console.log("sdf",xhr.responseText);
+		// 	}
+		// };
 
 	useEffect(() => {
 		if (loginData?.walletAddress) {
@@ -313,15 +317,15 @@ const Home = () => {
 												</div>
 												<div className='mb-3'>
 													<label className="small text-uppercase text-light-primary">Start time</label>
-													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>2024/05/15 08:00 </h6>
+													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>{startTimeDate} </h6>
 												</div>
 												<div className='mb-3'>
 													<label className="small text-uppercase text-light-primary">end time</label>
-													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>2024/05/20 08:00 </h6>
+													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>{endTimeDate} </h6>
 												</div>
 												<div className=''>
 													<label className="small text-uppercase text-light-primary">duration</label>
-													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>5 days</h6>
+													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>{duration} days</h6>
 												</div>
 											</Card>
 
@@ -425,9 +429,9 @@ const Home = () => {
 
 										</Card>
 										<Card className='p-2  mb-2 position-relative'>
-											{/* {isLoggedIn &&
+											{ startTime*1000 > currentTime &&
 												<div className='boxOverlay'></div>
-											} */}
+											}
 
 											<Row>
 												{/* <Col lg={6} className='mb-2'>
