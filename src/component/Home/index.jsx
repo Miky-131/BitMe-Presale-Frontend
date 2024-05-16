@@ -21,7 +21,6 @@ import '../componentCss/responsive.css'
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletSelect } from '../WalletSelect';
 import { PRESALE_PROGRAM_PUBKEY } from "../../hooks/constants";
-import useSolPrice from '../../hooks/useSolPrice';
 import EndTimer from './endTimer';
 import StartTimer from './startTimer';
 import { getTrxHistoryAction } from '../../coreFile/action';
