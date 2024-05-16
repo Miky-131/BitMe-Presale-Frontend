@@ -113,7 +113,7 @@ export default function usePresale() {
     getPresaleInfo();
   }, [publicKey, transactionPending]);
 
-  const buyToken = async (solBalance, referAddress) => {
+  const buyToken = async (solBalance, referAddress, wallet) => {
     if (program && publicKey) {
       try {
         setTransactionPending(true);
@@ -172,7 +172,14 @@ export default function usePresale() {
           tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
           associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
         })
-        .rpc();
+        .transaction();
+        let blockhash = (await connection.getLatestBlockhash('finalized')).blockhash;
+        tx.recentBlockhash = blockhash;
+        tx.feePayer = publicKey;
+      
+        const signedTx = await wallet.signTransaction(tx);
+
+        await connection.sendRawTransaction(signedTx.serialize());
         toast.success("Token purchase was successful.");
         saveData(getAuthToken, publicKey?.toBase58(), solBalance, solBalance * price_per_token, price_per_token);
         return false;

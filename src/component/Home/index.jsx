@@ -64,7 +64,7 @@ const Home = () => {
 			toast.warning("Please check SOL balance again.");
 			return;
 		}
-		buyToken(solBalance, referAddress);
+		buyToken(solBalance, referAddress, _useWallet);
 	};
 
 	const setMaxValue = () => {
