@@ -65,6 +65,10 @@ export type TokenPresale = {
         {
           "name": "identifier",
           "type": "u8"
+        },
+        {
+          "name": "receiverAccount",
+          "type": "publicKey"
         }
       ]
     },
@@ -242,196 +246,12 @@ export type TokenPresale = {
         {
           "name": "quoteAmount",
           "type": "u64"
+        },
+        {
+          "name": "referrerDdress",
+          "type": "publicKey"
         }
       ]
-    },
-    {
-      "name": "claimToken",
-      "accounts": [
-        {
-          "name": "presaleTokenMintAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "buyerPresaleTokenAssociatedTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "presalePresaleTokenAssociatedTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userInfo",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "presaleInfo",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "presaleReservePda",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "presaleAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyerAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "identifier",
-          "type": "u8"
-        }
-      ]
-    },
-    {
-      "name": "claimSol",
-      "accounts": [
-        {
-          "name": "presaleInfo",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "presaleReservePda",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "presaleAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyerAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userInfo",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "identifier",
-          "type": "u8"
-        }
-      ]
-    },
-    {
-      "name": "withdrawSol",
-      "accounts": [
-        {
-          "name": "presaleInfo",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "presaleReservePda",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "presaleAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyerAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
     }
   ],
   "accounts": [
@@ -543,6 +363,10 @@ export type TokenPresale = {
           {
             "name": "presaleId",
             "type": "u8"
+          },
+          {
+            "name": "referralAddress",
+            "type": "publicKey"
           }
         ]
       }
@@ -709,6 +533,10 @@ export const IDL: TokenPresale = {
         {
           "name": "identifier",
           "type": "u8"
+        },
+        {
+          "name": "receiverAccount",
+          "type": "publicKey"
         }
       ]
     },
@@ -886,196 +714,12 @@ export const IDL: TokenPresale = {
         {
           "name": "quoteAmount",
           "type": "u64"
+        },
+        {
+          "name": "referrerDdress",
+          "type": "publicKey"
         }
       ]
-    },
-    {
-      "name": "claimToken",
-      "accounts": [
-        {
-          "name": "presaleTokenMintAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "buyerPresaleTokenAssociatedTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "presalePresaleTokenAssociatedTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userInfo",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "presaleInfo",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "presaleReservePda",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "presaleAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyerAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "identifier",
-          "type": "u8"
-        }
-      ]
-    },
-    {
-      "name": "claimSol",
-      "accounts": [
-        {
-          "name": "presaleInfo",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "presaleReservePda",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "presaleAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyerAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userInfo",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "identifier",
-          "type": "u8"
-        }
-      ]
-    },
-    {
-      "name": "withdrawSol",
-      "accounts": [
-        {
-          "name": "presaleInfo",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "presaleReservePda",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "presaleAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyerAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
     }
   ],
   "accounts": [
@@ -1187,6 +831,10 @@ export const IDL: TokenPresale = {
           {
             "name": "presaleId",
             "type": "u8"
+          },
+          {
+            "name": "referralAddress",
+            "type": "publicKey"
           }
         ]
       }

@@ -16,7 +16,7 @@ import { PhantomWalletAdapter } from '@solana/wallet-adapter-phantom';
 import Lock from './component/Home/lock';
 
 function App() {
-  const network = WalletAdapterNetwork.Devnet;
+  const network = WalletAdapterNetwork.Mainnet;
   const endpoint = "https://mainnet.helius-rpc.com/?api-key=2d5226a1-a06a-4b96-a766-2ab2c0fcd68d";
 
   const wallets = useMemo(

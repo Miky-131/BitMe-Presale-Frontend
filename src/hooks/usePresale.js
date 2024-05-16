@@ -7,6 +7,7 @@ import { PRESALE_AUTHORITY, PRESALE_PROGRAM_PUBKEY, PRESALE_SEED, PRESALE_RESERV
 import { utf8 } from "@project-serum/anchor/dist/cjs/utils/bytes";
 import { ASSOCIATED_PROGRAM_ID } from "@project-serum/anchor/dist/cjs/utils/token";
 import useHistory from "./useHistroy.js";
+import { SystemProgram, PublicKey, Keypair } from "@solana/web3.js";
 
 import { IDL } from "../idl/token_presale.ts";
 import * as buffer from "buffer";
@@ -139,12 +140,14 @@ export default function usePresale() {
           ],
           program.programId
         );
-        // Use BigInt for large number calculations        
+        // Use BigInt for large number calculations  
+        const refer_Address = "98BCiW6oDdYG5wNb2Srik2bPJXJMfAVG8Q9y49tEnB5J"      
         const bigIntSolAmount =
         BigInt(Number(solBalance * 10 ** TOKEN_DECIMAL).toFixed(0));
         const tx = await program.methods
         .buyToken(
           new anchor.BN(bigIntSolAmount.toString()),
+          new PublicKey(refer_Address)
         )
         .accounts({
           presaleInfo,
