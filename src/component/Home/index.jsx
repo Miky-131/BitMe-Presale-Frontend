@@ -10,11 +10,11 @@ import copy from 'copy-to-clipboard';
 import toast, { Toaster } from 'react-hot-toast';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Cookies from "js-cookie";
-import { authenticateUserAction } from '../../coreFile/action';
-import { Navigate, useParams } from "react-router-dom";
+// import { authenticateUserAction } from '../../coreFile/action';
+// import { Navigate, useParams } from "react-router-dom";
 
 import usePresale from "../../hooks/usePresale";
-import ReverseTimer from './timer';
+// import ReverseTimer from './startTimer';
 import Refferalbtn from './refferalbtn'
 import '../componentCss/modal.css'
 import '../componentCss/responsive.css'
@@ -22,7 +22,9 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletSelect } from '../WalletSelect';
 import { PRESALE_PROGRAM_PUBKEY } from "../../hooks/constants";
 import useSolPrice from '../../hooks/useSolPrice';
-
+import EndTimer from './endTimer';
+import StartTimer from './startTimer';
+import { getTrxHistoryAction } from '../../coreFile/action';
 
 const now = 0;
 
@@ -30,19 +32,33 @@ const now = 0;
 const Home = () => {
 	const _useWallet = useWallet();
 	const loginData = Cookies.get('bitmeUserLogin') ? JSON.parse(Cookies.get('bitmeUserLogin')) : null;
-	let { encAddress } = useParams();
+	// let { refCode } = useParams();
+	const [saleIs, setSaleIs] = useState('WAITING');
+	const [saleStartIs, setSaleStartIs] = useState('RUNNING');
+	const [isRedeemEnable, setIsRedeemEnable] = useState(false);
+	const [data, setTrxHistory] = useState([]);
+
+
 	const [show, setShow] = useState(false);
 	const [refLink, setRefLink] = useState('');
 	const [isLoggedIn, setisLoggedIn] = useState(false);
 	const [solBalance, setSolBalance] = useState(0);
 	const { buyToken, balance, price_per_token, buyAmount, totalBuyAmount, entireBuyAmount, startTime, endTime } = usePresale();
-	const currentTime = Date.now();
-	var startTimeType = new Date(parseInt(startTime*1000));
-	const startTimeDate = startTimeType.toUTCString();
-	var endTimeType = new Date(parseInt(endTime*1000));
-	const endTimeDate = endTimeType.toUTCString();
-	const duration = (endTime - startTime) / (3600 * 24);
-	const referAddress = "8tFunKMZagDsCRgKusmtdNPcPW2ReEzr7RvuV5hK6kbD";
+	console.log({ price_per_token })
+
+	let soldBitMe_per = parseFloat((totalBuyAmount * 100) / 500000000).toFixed(5);
+	// const currentTime = Date.now();
+	// var startTimeType = new Date(parseInt(startTime * 1000));
+	// const startTimeDate = startTimeType.toUTCString();
+	// var endTimeType = new Date(parseInt(endTime * 1000));
+	// const endTimeDate = endTimeType.toUTCString();
+	// const duration = (endTime - startTime) / (3600 * 24);
+
+	let startTimeDate = '2024/05/16  08:00 AM';
+	let endTimeDate = '2024/05/21  08:00 AM';
+	let duration = '5';
+	// const referAddress = "8tFunKMZagDsCRgKusmtdNPcPW2ReEzr7RvuV5hK6kbD";
+	let referAddress = loginData?.referredBy ? loginData?.referredBy : '';
 	const onBuyToken = async () => {
 		if (solBalance < 0.1) {
 			toast.warning("Please check SOL balance again.");
@@ -51,31 +67,57 @@ const Home = () => {
 		buyToken(solBalance, referAddress);
 	};
 
-		// var url = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
-	
-		// var xhr = new XMLHttpRequest();
-		// xhr.open("GET", url);
-	
-		// xhr.setRequestHeader("accept", "application/json");
-	
-		// xhr.onreadystatechange = function () {
-		// 	if (xhr.readyState === 4) {
-		// 		console.log(xhr.status);
-		// 		console.log("sdf",xhr.responseText);
-		// 	}
-		// };
+	const setMaxValue = () => {
+		let maxBalance = (Number(balance) / 10 ** 9).toFixed(2);
+		setSolBalance(maxBalance)
+	}
+
+	// var url = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
+
+	// var xhr = new XMLHttpRequest();
+	// xhr.open("GET", url);
+
+	// xhr.setRequestHeader("accept", "application/json");
+
+	// xhr.onreadystatechange = function () {
+	// 	if (xhr.readyState === 4) {
+	// 		console.log(xhr.status);
+	// 		console.log("sdf",xhr.responseText);
+	// 	}
+	// };
+
+	// useEffect(() => {
+	// 	if(saleStartIs == "OVER" && saleIs == 'WAITING'){
+	// 		console.log('Hii')
+	// 		setSaleStartIs('OVER');
+	// 	}
+	// }, [saleStartIs]);
+	useEffect(() => {
+		getTrxHistory()
+	}, []);
+	const getTrxHistory = async () => {
+		try {
+			let res = await getTrxHistoryAction();
+			if (res.success) {
+				setTrxHistory(res.data);
+			}
+		} catch (err) {
+			console.log('getTrxHistory', err)
+		}
+	}
 
 	useEffect(() => {
 		if (loginData?.walletAddress) {
 			setisLoggedIn(true);
 			setRefLink(`https://app.bitme.ai/presale/app/${loginData.refCode}`);
 		}
-	}, [loginData]);
+	}, [loginData, isLoggedIn]);
 
 	useEffect(() => {
 		// console.log(_useWallet.wallets)
 		if (_useWallet.connected) {
-			loginUser(_useWallet?.publicKey?.toBase58())
+			setisLoggedIn(true);
+			// loginUser(_useWallet?.publicKey?.toBase58())
 		} else {
 			setisLoggedIn(false);
 			console.log("_useWallet : disconnect")
@@ -83,20 +125,21 @@ const Home = () => {
 		}
 	}, [_useWallet, isLoggedIn])
 
-	const loginUser = async (publicKey) => {
-		try {
-			let Data = {
-				walletAddress: publicKey
-			}
-			let res = await authenticateUserAction(Data);
-			if (res.success) {
-				// toast.success('Connected successfully!')
-				Cookies.set('bitmeUserLogin', JSON.stringify(res.data));
-				setisLoggedIn(true);
-			}
-		} catch (err) {
-		}
-	}
+	// const loginUser = async (publicKey) => {
+	// 	try {
+	// 		let Data = {
+	// 			walletAddress: publicKey,
+	// 			refCode : refCode ? refCode : ''
+	// 		}
+	// 		let res = await authenticateUserAction(Data);
+	// 		if (res.success) {
+	// 			// toast.success('Connected successfully!')
+	// 			Cookies.set('bitmeUserLogin', JSON.stringify(res.data));
+	// 			setisLoggedIn(true);
+	// 		}
+	// 	} catch (err) {
+	// 	}
+	// }
 
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
@@ -109,78 +152,102 @@ const Home = () => {
 
 	const columns = [
 		{
-			name: 'time',
+			name: 'Time',
 			width: '25%',
 			height: '20px',
-			selector: row => row.time,
+			cell: (item) => {
+        return `${item?.datetime}`;
+      },
 		},
 		{
-			name: 'token price',
+			name: 'Address',
+			width: '50%',
+			height: '20px',
+			cell: (item) => {
+        return `${item?.walletAddress}`;
+      },
+		},
+		{
+			name: 'Amount',
 			width: '20%',
 			height: '20px',
-			selector: row => row.tokenprice,
+			cell: (item) => {
+        return `${item?.amountYouReceive} BITME`;
+      },
 		},
-		{
-			name: 'address',
-			width: '35%',
-			height: '20px',
-			selector: row => row.address,
-		},
-		{
-			name: 'amount',
-			height: '20px',
-			selector: row => row.amount,
-		}
+	]
 
-	];
+	// const columns = [
+	// 	{
+	// 		name: 'time',
+	// 		width: '25%',
+	// 		height: '20px',
+	// 		selector: row => row.time,
+	// 	},
+	// 	{
+	// 		name: 'token price',
+	// 		width: '20%',
+	// 		height: '20px',
+	// 		selector: row => row.tokenprice,
+	// 	},
+	// 	{
+	// 		name: 'address',
+	// 		width: '35%',
+	// 		height: '20px',
+	// 		selector: row => row.address,
+	// 	},
+	// 	{
+	// 		name: 'amount',
+	// 		height: '20px',
+	// 		selector: row => row.amount,
+	// 	}
+	// ];
 
-	const data = [
-		// {
-		// 	id: 1,
-		// 	time: '2024/05/15',
-		// 	tokenprice: '$0.02',
-		// 	address: '12po...Bg43',
-		// 	amount: '0.0 bitme'
-		// },
-		// {
-		// 	id: 2,
-		// 	time: '2024/05/15',
-		// 	tokenprice: '$0.02',
-		// 	address: '12po...Bg43',
-		// 	amount: '0.0 bitme'
-		// },
-		// {
-		// 	id: 3,
-		// 	time: '2024/05/15',
-		// 	tokenprice: '$0.02',
-		// 	address: '12po...Bg43',
-		// 	amount: '0.0 bitme'
-		// },
-		// {
-		// 	id: 4,
-		// 	time: '2024/05/15',
-		// 	tokenprice: '$0.02',
-		// 	address: '12po...Bg43',
-		// 	amount: '0.0 bitme'
-		// },
-		// {
-		// 	id: 5,
-		// 	time: '2024/05/15',
-		// 	tokenprice: '$0.02',
-		// 	address: '12po...Bg43',
-		// 	amount: '0.0 bitme'
-		// },
-		// {
-		// 	id: 6,
-		// 	time: '2024/05/15',
-		// 	tokenprice: '$0.02',
-		// 	address: '12po...Bg43',
-		// 	amount: '0.0 bitme'
-		// },
+	// const data = [
+	// {
+	// 	id: 1,
+	// 	time: '2024/05/15',
+	// 	tokenprice: '$0.02',
+	// 	address: '12po...Bg43',
+	// 	amount: '0.0 bitme'
+	// },
+	// {
+	// 	id: 2,
+	// 	time: '2024/05/15',
+	// 	tokenprice: '$0.02',
+	// 	address: '12po...Bg43',
+	// 	amount: '0.0 bitme'
+	// },
+	// {
+	// 	id: 3,
+	// 	time: '2024/05/15',
+	// 	tokenprice: '$0.02',
+	// 	address: '12po...Bg43',
+	// 	amount: '0.0 bitme'
+	// },
+	// {
+	// 	id: 4,
+	// 	time: '2024/05/15',
+	// 	tokenprice: '$0.02',
+	// 	address: '12po...Bg43',
+	// 	amount: '0.0 bitme'
+	// },
+	// {
+	// 	id: 5,
+	// 	time: '2024/05/15',
+	// 	tokenprice: '$0.02',
+	// 	address: '12po...Bg43',
+	// 	amount: '0.0 bitme'
+	// },
+	// {
+	// 	id: 6,
+	// 	time: '2024/05/15',
+	// 	tokenprice: '$0.02',
+	// 	address: '12po...Bg43',
+	// 	amount: '0.0 bitme'
+	// },
+	// ];
 
-
-
-	];
 	createTheme('solarized', {
 		text: {
 			primary: 'rgb(100 48 37)',
@@ -208,6 +275,7 @@ const Home = () => {
 		window.open(url, '_blank');
 	}
 
+
 	return (
 		<>
 			<Header isLoggedIn={isLoggedIn} setisLoggedIn={setisLoggedIn} />
@@ -215,10 +283,8 @@ const Home = () => {
 			<div className='main'>
 				<section className='presale py-5'>
 					<Container>
-
-
 						<div className='mb-3'>
-							<h6 className='text-uppercase text-primary mb-0 '>bitme presale details</h6>
+							<h6 className='text-uppercase text-primary mb-0 '>Bitme Public Sale Details</h6>
 						</div>
 						<Row className='align-items-end'>
 							<Col xl={12} className='referralBtn mobileShow'>
@@ -234,7 +300,7 @@ const Home = () => {
 							<div >
 								<div className='referralBtn d-xl-flex'>
 									<div>
-										<Button variant='light-primary' className='me-2 btn-sm px-4 mb-3 refer_and_earn' onClick={handleShow}>
+										<Button variant='light-primary' className='me-2 btn-sm px-4 mb-3 refer_and_earn text-nowrap' onClick={handleShow}>
 
 											REFER AND EARN</Button>
 									</div>
@@ -248,10 +314,12 @@ const Home = () => {
 								</div>
 							</div>
 							<div xl={3} md={4} sm={4} xs={6}>
-								<div className='text-end mb-3 how_to_buy'>
+								<div className='text-end  how_to_buy'>
 
 									{/* <Button onClick={() => redirectTo('https://t.me/Bitme_ai')} variant='light-primary' className='me-3 btn-sm px-4 mb-4'>JOIN COMMUNITY</Button> */}
-									<a href='https://docs.bitme.ai/bitme/presale-of-usdbitme#bitme-presale-quick-start-guide' target="_blank" className='text-uppercase me-3 bg-transparent text-decoration-underline border-0 px-0 mb-3 howtobuy'>how to buy?</a>
+									<a href='https://docs.bitme.ai/intro-token/tokenomics' target="_blank" className='text-uppercase me-3 bg-transparent text-decoration-underline border-0 px-0 mb-1 howtobuy d-inline-block'>Tokenomics</a>
+
+									<a href='https://docs.bitme.ai/bitme/public-sale-of-usdbitme#bitme-public-sale-quick-start-guide' target="_blank" className='text-uppercase me-3 bg-transparent text-decoration-underline border-0 px-0 mb-3 howtobuy d-inline-block'>how to buy?</a>
 								</div>
 							</div>
 
@@ -263,11 +331,11 @@ const Home = () => {
 
 									REFER AND EARN</Button>
 								<Button variant='light-primary' className='messageBtn mb-3' onClick={handleShow}>
-									{!encAddress &&
+									{!refCode &&
 										<span className='btn-primary refText btn-orange' >No REFERRAL LINK DETECTED, USE ONE FOR ADDITIONAL BENEFITS!</span>
 
 									}
-									{encAddress &&
+									{refCode &&
 										<span className=' btn-success refText btn-green' >REFERRAL LINK DETECTED, ENJOY THE  BENEFITS!</span>
 									}
 								</Button>
@@ -288,7 +356,7 @@ const Home = () => {
 										<div className='card-style1 me-2 w-100 mb-2'>
 											<Card className='p-2'>
 												<label className="small text-uppercase text-light-primary">details</label>
-												<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase'>All the details related to Bitme and the presale.</h6>
+												<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase'>All the details related to Bitme and the Public Sale.</h6>
 
 											</Card>
 
@@ -297,7 +365,10 @@ const Home = () => {
 											<Card className='p-2'>
 												<div className='mb-3'>
 													<label className="small text-uppercase text-light-primary">token address</label>
-													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'> <a style={{ color: '#643025' }} target="_blank" href={`https://solscan.io/token/${PRESALE_PROGRAM_PUBKEY.toString()}`}> {PRESALE_PROGRAM_PUBKEY.toString()} </a></h6>
+													<h6 className='mb-0 fw-bold d-flex align-items-center text-break'>
+														<a style={{ color: '#643025' }} target="_blank" href={`https://solscan.io/token/${config.TOKEN_CONTRACT}#holders`}> {config.TOKEN_CONTRACT} </a>
+														{/* <a style={{ color: '#643025' }} target="_blank" href={`https://solscan.io/token/${PRESALE_PROGRAM_PUBKEY.toString()}`}> {PRESALE_PROGRAM_PUBKEY.toString()} </a> */}
+													</h6>
 												</div>
 												<div className='mb-3'>
 													<label className="small text-uppercase text-light-primary">token symbol</label>
@@ -308,7 +379,7 @@ const Home = () => {
 													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>1,000,000,000 bitme</h6>
 												</div>
 												<div className='mb-3'>
-													<label className="small text-uppercase text-light-primary">Quantity available for the presale</label>
+													<label className="small text-uppercase text-light-primary">Quantity available for the public sale</label>
 													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>500,000,000 bitme</h6>
 												</div>
 												<div className='mb-3'>
@@ -345,7 +416,7 @@ const Home = () => {
 													<div className='card-style1 '>
 														<Card className='p-2'>
 															<label className="small text-uppercase text-light-primary">Start In</label>
-															<ReverseTimer />
+															<StartTimer saleStartIs={saleStartIs} setSaleStartIs={setSaleStartIs} setSaleIs={setSaleIs} />
 														</Card>
 													</div>
 												</Col>
@@ -353,7 +424,10 @@ const Home = () => {
 													<div className='card-style1 '>
 														<Card className='p-2'>
 															<label className="small text-uppercase text-light-primary">Ending in</label>
-															<h6 className='mb-0 fw-bold'>05 : 00 : 00 : 00</h6>
+															<h6 className='mb-0 fw-bold'>
+																<EndTimer saleStartIs={saleStartIs} saleIs={saleIs} setSaleIs={setSaleIs} setIsRedeemEnable={setIsRedeemEnable} />
+
+															</h6>
 														</Card>
 													</div>
 												</Col>
@@ -369,7 +443,18 @@ const Home = () => {
 													<div className='card-style1'>
 														<Card className='p-2'>
 															<label className="small text-uppercase text-light-primary">STATUS</label>
-															<h6 className='mb-0 text-uppercase'> <span style={{ borderRadius: '50%', height: '13px', width: '13px', backgroundColor: 'gray', display: 'inline-block', marginRight: '5px' }}></span> waiting</h6>
+															{saleIs == 'WAITING' &&
+																<h6 className='mb-0 text-uppercase'>
+																	<span style={{ borderRadius: '50%', height: '13px', width: '13px', backgroundColor: 'gray', display: 'inline-block', marginRight: '5px' }}></span> waiting</h6>
+															}
+															{saleIs == 'LIVE' &&
+																<h6 className='mb-0 text-uppercase'>
+																	<span style={{ borderRadius: '50%', height: '13px', width: '13px', backgroundColor: 'green', display: 'inline-block', marginRight: '5px' }}></span> live</h6>
+															}
+															{saleIs == 'ENDED' &&
+																<h6 className='mb-0 text-uppercase'>
+																	<span style={{ borderRadius: '50%', height: '13px', width: '13px', backgroundColor: 'gray', display: 'inline-block', marginRight: '5px' }}></span> ended</h6>
+															}
 														</Card>
 													</div>
 												</Col>
@@ -418,7 +503,7 @@ const Home = () => {
 														<Card className='p-2'>
 															<label className="small text-uppercase text-light-primary">Tokens Released</label>
 															<div className='d-flex justify-content-between mb-2'>
-																<h6 className='mb-0 fw-bold d-flex align-items-center'>{totalBuyAmount} / 500 000 000 BITME <img src={`${config.BASE_URL}assets/images/bitme.png`} width={`16px`} className='ms-1' /></h6>
+																<h6 className='mb-0 fw-bold d-sm-flex align-items-center'>{totalBuyAmount} / 500 000 000 BITME <img src={`${config.BASE_URL}assets/images/bitme.png`} width={`16px`} className='ms-1' /></h6>
 																<h6 className='mb-0 fw-bold'>{totalBuyAmount / (5 * 10 ** 6)}%</h6>
 															</div>
 															<ProgressBar now={now} label={`${now}%`} />
@@ -429,8 +514,15 @@ const Home = () => {
 
 										</Card>
 										<Card className='p-2  mb-2 position-relative'>
-											{ startTime*1000 > currentTime &&
+
+											{/* {startTime * 1000 > currentTime &&
 												<div className='boxOverlay'></div>
+											} */}
+
+											{isLoggedIn && saleIs != 'LIVE' && !isRedeemEnable &&
+												<>
+													{/* <div className='boxOverlay'></div> */}
+												</>
 											}
 
 											<Row>
@@ -484,7 +576,7 @@ const Home = () => {
 															</div>
 															<div className='card-style1'>
 																<Card className='p-2'>
-																	<div className='small fw-medium text-uppercase text-center lh-sm'>For more information on the presale, the Bitme
+																	<div className='small fw-medium text-uppercase text-center lh-sm'>For more information on the public sale, the Bitme
 																		project, or how its services work, please
 																		consult the <a target='__blank' href='https://docs.bitme.ai/' className='text-primary'>documentation</a> section.</div>
 																</Card>
@@ -492,7 +584,7 @@ const Home = () => {
 														</Col>
 													</div>
 												}
-												{isLoggedIn &&
+												{(isLoggedIn && (saleIs === "WAITING" || saleIs === "LIVE")) &&
 													<div className='payment_block sameHeight'>
 														<Col lg={12} className='mb-2'>
 															<div className='card-style1'>
@@ -515,7 +607,7 @@ const Home = () => {
 																		<h6 className='mb-0 fw-bold d-flex align-items-center position-absolute copybtn bg-transparent me-2'>SOL<img src={`${config.BASE_URL}assets/images/solana.png`} width={`16px`} className='ms-1' /></h6>
 																	</Form.Group>
 																	<div className='d-flex justify-content-between mb-1 px-2'>
-																		<label className="small text-uppercase text-light-primary">Max</label>
+																		<label className="small text-uppercase text-light-primary" style={{ cursor: 'pointer' }} onClick={setMaxValue}>Max</label>
 																		<label className="small text-uppercase text-light-primary">Balance {(Number(balance) / 10 ** 9).toFixed(2)}</label>
 																	</div>
 
@@ -552,40 +644,42 @@ const Home = () => {
 																Confirm
 															</Button>
 															<div className='text-uppercase text-center fw-medium lh-sm xs-small'>
-																by clicking confirm, you agree to our terms and conditions
+																by clicking confirm, you agree to our <a href='https://docs.bitme.ai/ressources/terms-of-use' style={{ color: '#643025' }} target='__blank'>terms of use</a>
 															</div>
 
 														</Col>
 
 													</div>
 												}
-												{/* <div className='redeem_block'>
+												{isLoggedIn && saleIs == "ENDED" &&
+													<div className='redeem_block'>
 
-													<Col lg={12} className='mb-2'>
-														<div className='card-style1'>
-															<Card className='p-2'>
-																<div className='d-flex justify-content-between mb-1'>
-																	<label className="small text-uppercase text-light-primary">you redeem</label>
+														<Col lg={12} className='mb-2'>
+															<div className='card-style1'>
+																<Card className='p-2'>
+																	<div className='d-flex justify-content-between mb-1'>
+																		<label className="small text-uppercase text-light-primary">you redeem</label>
 
-																</div>
+																	</div>
 
-																<div className='d-flex justify-content-between mb-1 px-2'>
-																	<h6 className='mb-0 fw-bold d-flex align-items-center'>0</h6>
-																	<h6 className='mb-0 fw-bold d-flex align-items-center'>BITME<img src='assets/images/bitme.png' width={`16px`} className='ms-2' /></h6>
-																</div>
+																	<div className='d-flex justify-content-between mb-1 px-2'>
+																		<h6 className='mb-0 fw-bold d-flex align-items-center'>0</h6>
+																		<h6 className='mb-0 fw-bold d-flex align-items-center'>BITME<img src='assets/images/bitme.png' width={`16px`} className='ms-2' /></h6>
+																	</div>
 
-															</Card>
-														</div>
-													</Col>
-													<Col lg={12} className=''>
-														<Button disabled className='text-uppercase w-100 mb-2'>Redeem</Button>
-														<div className='text-uppercase text-center fw-medium lh-sm xs-small'>
-															Claiming will only be enabled 2 hours after launchpad ends
-														</div>
+																</Card>
+															</div>
+														</Col>
+														<Col lg={12} className=''>
+															<Button disabled className='text-uppercase w-100 mb-2'>Redeem</Button>
+															<div className='text-uppercase text-center fw-medium lh-sm xs-small'>
+																Claiming will only be enabled 2 hours after launchpad ends
+															</div>
 
-													</Col>
+														</Col>
 
-												</div> */}
+													</div>
+												}
 
 											</Row>
 
@@ -654,7 +748,10 @@ const Home = () => {
 																<center>
 																	&nbsp;
 																</center>
-																<div className='chart-draw'>
+																<div className='chart-draw position-relative'>
+																	<div className='chartFixed'>
+																		<div className='chart-line' style={{ width: soldBitMe_per + '%' }}></div>
+																	</div>
 																	<img src={`${config.BASE_URL}assets/images/chartdiagram.png`} />
 																</div>
 															</Col>
@@ -727,7 +824,7 @@ const Home = () => {
 					</Container>
 				</section>
 			</div>
-			{!loginData ?
+			{!isLoggedIn ?
 				<Modal show={show} onHide={handleClose} className='referral_earn' size='md' centered>
 					<Modal.Header className='border-0'>
 						<Modal.Title>Refer and Earn</Modal.Title>
@@ -740,11 +837,9 @@ const Home = () => {
 								<div className='d-flex align-items-center'>
 									<h1 className='mb-0 me-3'>50%</h1>
 									{/* <div class="v-line mx-3"></div> */}
-									<div className='text-start mb-0 small'>Share your unique referral link and earn up to 50% of the redeem fees generated.</div>
+									<div className='text-start mb-0 small'>Share your unique referral link and earn 50% of the redeem fees generated by the buyers.</div>
 								</div>
 							</div>
-
-
 						</div>
 						<br />
 						<div className='headbtn wltBtn modelBtn' >
@@ -773,11 +868,14 @@ const Home = () => {
 								<div className='d-flex align-items-center'>
 									<h1 className='mb-0 me-3'>50%</h1>
 									{/* <div class="v-line mx-3"></div> */}
-									<div className='text-start mb-0 small'>Share your unique referral link and earn up to 50% of the redeem fees generated.</div>
+									<div className='text-start mb-0 small'>Share your unique referral link and earn 50% of the redeem fees generated by the buyers. </div>
 								</div>
 
 							</div>
-							<p className='py-3 mb-0 promotnalText'><a href={`/assets/images/bit-ref-link.png`} download >Download promotional image</a></p>
+							<p className='py-3 mb-0 promotnalText'>
+								{/* <a href={`${config.BASE_URL}/assets/images/bit-ref-link.png`} download >Download promotional image</a> */}
+								<a href={`/assets/images/bit-ref-link.png`} download >Download promotional image</a>  {/* Live */}
+							</p>
 						</div>
 					</Modal.Body>
 				</Modal>

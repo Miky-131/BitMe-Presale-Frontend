@@ -1,44 +1,3 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-
-
 .wltBtn .wallet-adapter-button-trigger {
   background-color: #846359;
 }
@@ -114,8 +73,103 @@ header .headbtn.wltBtn .wallet-adapter-button {
   font-weight: 500;
   color: #643025;
 }
+/* ------------------ */
+.main .form-control:focus {
+  border-color: none;
+  box-shadow: none;
+}
+/* --------------- */
+.chartFixed {
+  max-width: 91%;
+  display: block;
+  unicode-bidi: isolate;
+  margin: 0px;
+}
+.chart-line {
+  background: rgb(100, 48, 37, 0.23);
+  height: 319px;
+  width: 100%;
+  position: relative;
+  bottom: -28px;
+  border-right: 3px solid #643025;
+  margin-bottom: 33px;
+  margin-right: 0px;
+  left: 0;
+  right: 0;
+  margin-left: 45px;
+}
+.chart-draw img{
+  margin-top: -360px;
+}
 
-
-.how_to_buy{
+@media only screen and (max-width: 1199px) {
+  .chart-draw img {
+    margin-top: -251px;
+}
+  .chart-draw .chart-line {
+    background: rgb(100, 48, 37, 0.23);
+    height: 185px;
+    bottom: 0px;
+    border-right: 3px solid #643025;
+    margin-bottom: 19px;
+    margin-right: 53px;
+    left: 0;
+    right: 0;
+    margin-left: 27px;
+}
 
 }
+@media only screen and (max-width: 767px) {
+  .chart-draw img {
+    margin-top: -188px;
+}
+
+.chart-draw .chart-line {
+  height: 133px;
+  margin-bottom: 14px;
+  margin-left: 19px;
+}}
+@media only screen and (max-width: 425px) {
+  .chart-draw .chart-line {
+    height: 100px;
+}
+.chart-draw img {
+  margin-top: -152px;
+}
+.chart-draw .chart-line {
+  margin-bottom: 11px;
+  margin-left: 15px;
+}}
+@media only screen and (max-width: 375px) {
+  .chart-draw .chart-line {
+    height: 87px;
+}
+  .chart-draw img {
+    margin-top: -132px;
+}
+.chart-draw .chart-line {
+  margin-bottom: 9px;
+  margin-left: 13px;
+}}
+@media only screen and (max-width: 360px) {
+  .chart-draw img {
+    margin-top: -131px;
+}
+.chart-draw .chart-line {
+  height: 85px;
+}
+.chart-draw .chart-line {
+  margin-bottom: 9px;
+  margin-left: 12px;
+}}
+@media only screen and (max-width: 320px) {
+  .chart-draw img {
+    margin-top: -113px;
+}
+.chart-draw .chart-line {
+  height: 72px;
+}
+  .chart-draw .chart-line {
+    margin-bottom: 7px;
+    margin-left: 11px;
+}}

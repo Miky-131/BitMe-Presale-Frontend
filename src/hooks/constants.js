@@ -1,15 +1,15 @@
 import { PublicKey } from "@solana/web3.js";
 
 export const PRESALE_PROGRAM_PUBKEY = new PublicKey(
-  "3AbJVkSzNn691PS4uLsg8M6WbubbVqYe1oC7KZ7K1ffe"
+  "2jdxzbDF1T1yAjVXkkoYt9RUE1SHCvuvvFLWkYpixtAr"
 );
 
 export const TOKEN_PUBKEY = new PublicKey(
-  "Hvf7x8LyznH5NQKWLNbGd9UAjm3Vnb3ZJJ9f2t1DCLug"
+  "EvEe9SP5W7iZcAYabG2K2nzZo1FmMVgdDvHbnsH6Esq1"
 );
 
 export const PRESALE_AUTHORITY = new PublicKey(
-  "8tFunKMZagDsCRgKusmtdNPcPW2ReEzr7RvuV5hK6kbD"
+  "98BCiW6oDdYG5wNb2Srik2bPJXJMfAVG8Q9y49tEnB5J"
 );
 
 export const PRESALE_SEED = "TEST_BITME_PRESALE_SEED";

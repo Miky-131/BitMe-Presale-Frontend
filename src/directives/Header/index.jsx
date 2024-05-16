@@ -4,6 +4,7 @@ import { Container, Row, Col, Nav, Navbar, Button, Form, Image } from 'react-boo
 import '../../component/componentCss/header.css';
 import { authenticateUserAction } from '../../coreFile/action';
 import Cookies from "js-cookie";
+import { useParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { WalletConnectProvider } from '../../component/Home/WalletConnectProvider';
 import config from '../../config';
@@ -16,16 +17,21 @@ import CustomWalletConnectButton from '../../component/Home/customWalletConnect.
 
 const Header = ({ isLoggedIn, setisLoggedIn }) => {
 	const _useWallet = useWallet();
+	let { refCode } = useParams();
 	const [isSticky, setIsSticky] = useState(false);
 	// const [isLoggedIn, setisLoggedIn] = useState(false);
 	const loginData = Cookies.get('bitmeUserLogin') ? JSON.parse(Cookies.get('bitmeUserLogin')) : null;
 
 	let path = window.location.pathname;
-	useEffect(() => {
-		// if (loginData?.walletAddress) {
-		// 	setisLoggedIn(true);
-		// }
 
+	useEffect(() => {
+		if (loginData?.walletAddress) {
+			setisLoggedIn(true);
+		}
+	}, [isLoggedIn]);
+
+
+	useEffect(() => {
 		const handleScroll = () => {
 			const offset = window.scrollY;
 			if (offset > 100) { // Change 100 to whatever offset you need
@@ -45,18 +51,20 @@ const Header = ({ isLoggedIn, setisLoggedIn }) => {
 
 	useEffect(() => {
 		if (_useWallet.connected) {
+			
 			loginUser(_useWallet?.publicKey?.toBase58())
 		} else {
 			console.log("_useWallet : disconnect")
-			Cookies.remove('bitmeUserLogin');
 			setisLoggedIn(false);
+			Cookies.remove('bitmeUserLogin');
 		}
 	}, [_useWallet])
 
 	const loginUser = async (publicKey) => {
 		try {
 			let Data = {
-				walletAddress: publicKey
+				walletAddress: publicKey,
+				refCode : refCode ? refCode : ''
 			}
 			let res = await authenticateUserAction(Data);
 
@@ -83,8 +91,8 @@ const Header = ({ isLoggedIn, setisLoggedIn }) => {
 							<Navbar.Toggle aria-controls="basic-navbar-nav" />
 							<Navbar.Collapse id="basic-navbar-nav">
 								<Nav className="mx-auto">
-									<Nav.Link href='/' className={(path == "/" || path.match('presale')) && 'active' }>Public Sale</Nav.Link>
-									<Nav.Link href='/bitdex' className={ path.match('bitdex') && 'active' } >BitDEX</Nav.Link>
+									<Nav.Link href={`${config.BASE_URL}`} className={(path == "/" || path.match('presale')) && 'active' }>Public Sale</Nav.Link>
+									<Nav.Link href={`${config.BASE_URL}bitdex`} className={ path.match('bitdex') && 'active' } >BitDEX</Nav.Link>
 									<Nav.Link target='__blank' href="https://bitme.ai/bitshare">BitSHARE</Nav.Link>
 									<Nav.Link target='__blank' href="https://docs.bitme.ai/">Docs</Nav.Link>
 									{/* <Nav.link>

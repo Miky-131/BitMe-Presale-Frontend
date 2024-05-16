@@ -1,5 +1,6 @@
 import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useEffect, useMemo, useState } from "react";
+import config from "../config";
 
 export default function useHistory() {
     const { publicKey } = useWallet();
@@ -12,23 +13,23 @@ export default function useHistory() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ walletAddress: publicKey.toBase58() })
             };
-            fetch('https://espsofttech.org:8182/api/authenticate', requestOptions)
+            fetch(config.API_URL + '/authenticate', requestOptions)
                 .then(response => response.json())
                 .then(data => setGetAuthToken(data.data.authToken));
         }
     }, [publicKey]);
 
-    const saveData = async( authtoken, walletaddress, amounttopay, amountreceive) => {
+    const saveData = async (authtoken, walletaddress, amounttopay, amountreceive) => {
         const requestOptions = {
             method: 'POST',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
                 'Authorization': authtoken,
                 'My-Custom-Header': 'foobar'
             },
             body: JSON.stringify({ walletAddress: walletaddress, amountYouPay: amounttopay, amountYouReceive: amountreceive })
         };
-        fetch('https://espsofttech.org:8182/api/submitTransaction', requestOptions)
+        fetch(config.API_URL + '/submitTransaction', requestOptions)
             .then(response => response.json())
     }
 

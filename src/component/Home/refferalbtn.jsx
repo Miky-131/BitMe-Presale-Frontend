@@ -3,18 +3,18 @@ import { Button } from 'react-bootstrap';
 import { useParams } from "react-router-dom";
 
 const Refferalbtn = () => {
-    let { encAddress } = useParams();
+    let { refCode } = useParams();
 
     return (
         <>
 
 
 
-            {!encAddress &&
+            {!refCode &&
                 <span className='btn-primary refText btn-orange' >No REFERRAL LINK DETECTED, USE ONE FOR ADDITIONAL BENEFITS!</span>
 
             }
-            {encAddress &&
+            {refCode &&
                 <span className=' btn-success refText btn-green' >REFERRAL LINK DETECTED, ENJOY THE  BENEFITS!</span>
             }
 

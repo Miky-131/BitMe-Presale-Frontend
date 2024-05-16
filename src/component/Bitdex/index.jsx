@@ -7,7 +7,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import Cookies from "js-cookie";
 import { useWallet } from '@solana/wallet-adapter-react';
 import usePresale from "../../hooks/usePresale";
-import { authenticateUserAction } from '../../coreFile/action';
+// import { authenticateUserAction } from '../../coreFile/action';
 import { IoIosArrowDown } from "react-icons/io";
 import '../componentCss/bitdex.css'
 import "../componentCss/home.css"
@@ -15,32 +15,6 @@ import "../componentCss/home.css"
 const Bitdex = () => {
 	const _useWallet = useWallet();
 	const [isLoggedIn, setisLoggedIn] = useState(false);
-
-	useEffect(() => {
-		if (_useWallet.connected) {
-			loginUser(_useWallet?.publicKey?.toBase58())
-		} else {
-			setisLoggedIn(false);
-			console.log("_useWallet : disconnect")
-			Cookies.remove('bitmeUserLogin');
-		}
-	}, [_useWallet, isLoggedIn])
-
-	const loginUser = async (publicKey) => {
-		try {
-			let Data = {
-				walletAddress: publicKey
-			}
-			let res = await authenticateUserAction(Data);
-			if (res.success) {
-				// toast.success('Connected successfully!')
-				Cookies.set('bitmeUserLogin', JSON.stringify(res.data));
-				setisLoggedIn(true);
-			}
-		} catch (err) {
-		}
-	}
-
 
 	return (
 		<>
@@ -119,8 +93,9 @@ const Bitdex = () => {
 															</Form.Group>
 
 															<div className='d-flex justify-content-between mb-1 px-2'>
-																<label className="small text-uppercase text-light-primary">Max</label>
-																<label className="small text-uppercase text-light-primary">Balance: 0.0</label>
+																
+																{/* <label className="small text-uppercase text-light-primary">Max</label>
+																<label className="small text-uppercase text-light-primary">Balance: 0.0</label> */}
 															</div>
 
 														</Card>

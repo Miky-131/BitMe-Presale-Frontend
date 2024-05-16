@@ -10,13 +10,13 @@ require('@solana/wallet-adapter-react-ui/styles.css');
  
 export const WalletConnectProvider = ({children}) => {
     // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
-    const network = WalletAdapterNetwork.Devnet;
+    const network = WalletAdapterNetwork.Mainnet;
  
     // You can also provide a custom RPC endpoint.
     const endpoint = useMemo(() => {
-        if (network === WalletAdapterNetwork.Devnet) {
+        if (network === WalletAdapterNetwork.Mainnet) {
             // return 'https://rpc.hellomoon.io/00f4178d-d782-4d0e-ac29-02706daa7be2'
-            return 'https://api.devnet.solana.com/'
+            return 'https://mainnet.helius-rpc.com/?api-key=2d5226a1-a06a-4b96-a766-2ab2c0fcd68d'
         }
         return clusterApiUrl(network)
     }, [network])

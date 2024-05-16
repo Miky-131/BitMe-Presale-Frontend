@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function ReverseTimer() {
+function StartTimer({ saleStartIs, setSaleStartIs, setSaleIs }) {
     const [timeLeft, setTimeLeft] = useState(0);
     let intervalId
     useEffect(() => {
@@ -24,17 +24,20 @@ function ReverseTimer() {
         // const targetDate = new Date("Fri May 15 2024 08:00:00"); // May 15, 2024, 08:00 AM in UTC
 
         const currentDate = new Date();
-        currentDate.setTime(currentDate.getTime() + (14 * 60 * 60 * 1000));
-        const targetDate = new Date("Fri May 15 2024 08:00:00"); // May 15, 2024, 08:00 AM in GMT
-        targetDate.setTime(targetDate.getTime() + (14 * 60 * 60 * 1000));
-        
+        // console.log('currentDate', currentDate);
+        // currentDate.setTime(currentDate.getTime() + (14 * 60 * 60 * 1000));
+        let targetDate = new Date("Thu May 16 2024 15:00:00 GMT");
+        // console.log('targetDate', targetDate);
+        // targetDate.setTime(targetDate.getTime() + (14 * 60 * 60 * 1000));
+
         const difference = targetDate - currentDate;
 
         const secondsLeft = Math.floor(difference / 1000);
 
         setTimeLeft(secondsLeft);
-
         if (secondsLeft <= 0) {
+            setSaleStartIs('OVER');
+            setSaleIs('LIVE');
             clearInterval(intervalId);
         }
     };
@@ -48,10 +51,14 @@ function ReverseTimer() {
     };
 
     return (
-        <h6 className='mb-0 fw-bold'>{formatTime(timeLeft)}</h6>
-
-
+        <>
+            {saleStartIs == 'RUNNING' ?
+                <h6 className='mb-0 fw-bold'>{formatTime(timeLeft)}</h6>
+                :
+                <h6 className='mb-0 fw-bold'>00 : 00 : 00 : 00</h6>
+            }
+        </>
     );
 }
 
-export default ReverseTimer;
+export default StartTimer;

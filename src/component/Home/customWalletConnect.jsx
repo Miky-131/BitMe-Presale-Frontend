@@ -12,30 +12,31 @@ const CustomWalletConnectButton = ({ _useWallet, isLoggedIn, setisLoggedIn, logi
   const handleShow = () => setShow(true);
 
 
-  useEffect(() => {
-    if (_useWallet.connected) {
-      loginUser(_useWallet?.publicKey?.toBase58())
-    } else {
-      console.log("_useWallet : disconnect")
-      Cookies.remove('bitmeUserLogin');
-      setisLoggedIn(false);
-    }
-  }, [_useWallet])
+  // useEffect(() => {
+  //   if (_useWallet.connected) {
+  //     console.log({ _useWallet, connected: _useWallet.connected, publicKey: _useWallet?.publicKey?.toBase58() });
+  //     loginUser(_useWallet?.publicKey?.toBase58())
+  //   } else {
+  //     console.log("_useWallet : disconnect")
+  //     Cookies.remove('bitmeUserLogin');
+  //     setisLoggedIn(false);
+  //   }
+  // }, [_useWallet])
 
 
-  const loginUser = async (publicKey) => {
-    try {
-      let Data = {
-        walletAddress: publicKey
-      }
-      let res = await authenticateUserAction(Data);
-      if (res.success) {
-        Cookies.set('bitmeUserLogin', JSON.stringify(res.data));
-        setisLoggedIn(true);
-      }
-    } catch (err) {
-    }
-  }
+  // const loginUser = async (publicKey) => {
+  //   try {
+  //     let Data = {
+  //       walletAddress: publicKey
+  //     }
+  //     let res = await authenticateUserAction(Data);
+  //     if (res.success) {
+  //       Cookies.set('bitmeUserLogin', JSON.stringify(res.data));
+  //       setisLoggedIn(true);
+  //     }
+  //   } catch (err) {
+  //   }
+  // }
 
   return (
     <>
