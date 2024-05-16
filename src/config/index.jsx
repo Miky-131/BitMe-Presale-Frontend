@@ -16,7 +16,7 @@ const config = {
     //  BASE_URL: '/', 
     //  API_URL : 'https://app.bitme.ai/api',
 
-     TOKEN_CONTRACT : '2jdxzbDF1T1yAjVXkkoYt9RUE1SHCvuvvFLWkYpixtAr'
+     TOKEN_CONTRACT : 'ARwjDQRry2CmF2RPKL19ZRmAwg852ZGQWtLMQ3jRtKKt'
 
 }
 // https://app.bitme.ai/

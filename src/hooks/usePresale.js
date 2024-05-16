@@ -2,6 +2,7 @@ import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapte
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import * as anchor from "@project-serum/anchor";
+import { Program } from "@project-serum/anchor";
 import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import { PRESALE_AUTHORITY, PRESALE_PROGRAM_PUBKEY, PRESALE_SEED, PRESALE_RESERVE_SEED, TOKEN_DECIMAL, TOKEN_PUBKEY, USER_SEED, ESCROW_SEED } from "./constants.js";
 import { utf8 } from "@project-serum/anchor/dist/cjs/utils/bytes";
@@ -19,7 +20,9 @@ export default function usePresale() {
   const { publicKey } = useWallet();
   const anchorWallet = useAnchorWallet();
   const { connection } = useConnection();
+  const {connected: walletConnected} = useWallet();
   const [balance, setBalance] = useState(0);
+  const [programforread, setProgramForRead] = useState()
   const [transactionPending, setTransactionPending] = useState(false);
   const [price_per_token, setPricePerToken] = useState(0);
   const [buyAmount, setBuyAmount] = useState(0);
@@ -34,6 +37,7 @@ export default function usePresale() {
   const [totalSoftCap, setTotalSoftCap] = useState(0);
   const [loading, setLoading] = useState(false);
   const {getAuthToken, saveData} = useHistory();
+  const PRESALE_ID = "2jdxzbDF1T1yAjVXkkoYt9RUE1SHCvuvvFLWkYpixtAr";
   const program = useMemo(() => {
     if (anchorWallet) {
       const provider = new anchor.AnchorProvider(
@@ -47,7 +51,10 @@ export default function usePresale() {
 
   useEffect(() => {
     const getPresaleInfo = async () => {
-      if (program && !transactionPending) {
+    const programforread = new Program(IDL, PRESALE_ID, { connection });
+    setProgramForRead(programforread)
+
+      if (programforread) {
         try {
           setLoading(true);
           const [presale_info, presale_bump] = findProgramAddressSync(
@@ -55,10 +62,10 @@ export default function usePresale() {
               utf8.encode(PRESALE_SEED),
               PRESALE_AUTHORITY.toBuffer(),
             ],
-            program.programId
+            programforread.programId
           );
           // @ts-ignore
-          const info = await program.account.presaleInfo.fetch(presale_info);
+          const info = await programforread.account.presaleInfo.fetch(presale_info);
           setPricePerToken(Number(info.pricePerToken));
           setStageNumber(info.stage)
           setStartTime(info.startTime);
@@ -77,7 +84,7 @@ export default function usePresale() {
     };
 
     const getUserInfo = async () => {
-      if (program && publicKey && !transactionPending) {
+      if (programforread && publicKey && !transactionPending) {
         try {
           setLoading(true);
           const [userInfo, userBump] = findProgramAddressSync(
@@ -86,12 +93,12 @@ export default function usePresale() {
               PRESALE_AUTHORITY.toBuffer(),
               publicKey.toBuffer(),
             ],
-            program.programId
+            programforread.programId
           );
           const balance = await connection.getBalance(publicKey);
           setBalance(balance);
           // @ts-ignore
-          const info = await program.account.userInfo.fetch(userInfo);
+          const info = await programforread.account.userInfo.fetch(userInfo);
           setBuyAmount(info.buyTokenAmount);
           setQuoteAmount(info.buyQuoteAmount);
         } catch (error) {
@@ -101,8 +108,9 @@ export default function usePresale() {
         }
       }
     };
-    getPresaleInfo();
+
     getUserInfo();
+    getPresaleInfo();
   }, [publicKey, transactionPending]);
 
   const buyToken = async (solBalance, referAddress) => {
@@ -166,7 +174,7 @@ export default function usePresale() {
         })
         .rpc();
         toast.success("Token purchase was successful.");
-        saveData(getAuthToken, publicKey?.toBase58(), solBalance, solBalance * price_per_token);
+        saveData(getAuthToken, publicKey?.toBase58(), solBalance, solBalance * price_per_token, price_per_token);
         return false;
       } catch (error) {
         console.log(error);

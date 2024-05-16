@@ -37,6 +37,7 @@ const Home = () => {
 	const [saleStartIs, setSaleStartIs] = useState('RUNNING');
 	const [isRedeemEnable, setIsRedeemEnable] = useState(false);
 	const [data, setTrxHistory] = useState([]);
+	const [price, setPrice] = useState(0)
 
 
 	const [show, setShow] = useState(false);
@@ -44,10 +45,9 @@ const Home = () => {
 	const [isLoggedIn, setisLoggedIn] = useState(false);
 	const [solBalance, setSolBalance] = useState(0);
 	const { buyToken, balance, price_per_token, buyAmount, totalBuyAmount, entireBuyAmount, startTime, endTime } = usePresale();
-	console.log({ price_per_token })
 
 	let soldBitMe_per = parseFloat((totalBuyAmount * 100) / 500000000).toFixed(5);
-	// const currentTime = Date.now();
+	const currentTime = Date.now();
 	// var startTimeType = new Date(parseInt(startTime * 1000));
 	// const startTimeDate = startTimeType.toUTCString();
 	// var endTimeType = new Date(parseInt(endTime * 1000));
@@ -72,26 +72,16 @@ const Home = () => {
 		setSolBalance(maxBalance)
 	}
 
-	// var url = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
+	var url = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
+	useEffect(() => {
+		const getPrice = async() => {
+			fetch(url)
+			.then(response => response.json())
+			.then(data => setPrice(data.solana.usd))
+		}
+		getPrice()
+	}, [])
 
-	// var xhr = new XMLHttpRequest();
-	// xhr.open("GET", url);
-
-	// xhr.setRequestHeader("accept", "application/json");
-
-	// xhr.onreadystatechange = function () {
-	// 	if (xhr.readyState === 4) {
-	// 		console.log(xhr.status);
-	// 		console.log("sdf",xhr.responseText);
-	// 	}
-	// };
-
-	// useEffect(() => {
-	// 	if(saleStartIs == "OVER" && saleIs == 'WAITING'){
-	// 		console.log('Hii')
-	// 		setSaleStartIs('OVER');
-	// 	}
-	// }, [saleStartIs]);
 	useEffect(() => {
 		getTrxHistory()
 	}, []);
@@ -503,8 +493,8 @@ const Home = () => {
 														<Card className='p-2'>
 															<label className="small text-uppercase text-light-primary">Tokens Released</label>
 															<div className='d-flex justify-content-between mb-2'>
-																<h6 className='mb-0 fw-bold d-sm-flex align-items-center'>{totalBuyAmount} / 500 000 000 BITME <img src={`${config.BASE_URL}assets/images/bitme.png`} width={`16px`} className='ms-1' /></h6>
-																<h6 className='mb-0 fw-bold'>{totalBuyAmount / (5 * 10 ** 6)}%</h6>
+																<h6 className='mb-0 fw-bold d-sm-flex align-items-center'>{new Intl.NumberFormat().format(totalBuyAmount)} / 500,000,000 BITME <img src={`${config.BASE_URL}assets/images/bitme.png`} width={`16px`} className='ms-1' /></h6>
+																<h6 className='mb-0 fw-bold'>{new Intl.NumberFormat().format(totalBuyAmount / (5 * 10 ** 6))}%</h6>
 															</div>
 															<ProgressBar now={now} label={`${now}%`} />
 														</Card>
@@ -515,9 +505,9 @@ const Home = () => {
 										</Card>
 										<Card className='p-2  mb-2 position-relative'>
 
-											{/* {startTime * 1000 > currentTime &&
+											{startTime * 1000 > currentTime &&
 												<div className='boxOverlay'></div>
-											} */}
+											}
 
 											{isLoggedIn && saleIs != 'LIVE' && !isRedeemEnable &&
 												<>
@@ -608,7 +598,7 @@ const Home = () => {
 																	</Form.Group>
 																	<div className='d-flex justify-content-between mb-1 px-2'>
 																		<label className="small text-uppercase text-light-primary" style={{ cursor: 'pointer' }} onClick={setMaxValue}>Max</label>
-																		<label className="small text-uppercase text-light-primary">Balance {(Number(balance) / 10 ** 9).toFixed(2)}</label>
+																		<label className="small text-uppercase text-light-primary">Balance {new Intl.NumberFormat().format(Number(balance) / 10 ** 9)}</label>
 																	</div>
 
 																</Card>
@@ -621,7 +611,7 @@ const Home = () => {
 																		<label className="small text-uppercase text-light-primary">You Get</label>
 																	</div>
 																	<Form.Group className=" position-relative mb-1" controlId="formBasicEmail">
-																		<Form.Control type="number" value={Number(solBalance * price_per_token).toFixed(2)} className='border-0 rounded-2' />
+																		<Form.Control type="number" value={new Intl.NumberFormat().format(solBalance * price_per_token)} className='border-0 rounded-2' />
 																		{/* <input
 																		value={Number(solBalance * price_per_token).toFixed(2)}
 																		className='border-0 rounded-2'
@@ -630,7 +620,7 @@ const Home = () => {
 																	</Form.Group>
 																	<div className='d-flex justify-content-between mb-1 px-2'>
 																		<label className="small text-uppercase text-light-primary">&nbsp;</label>
-																		<label className="small text-uppercase text-light-primary">Balance {Number(buyAmount) / 10 ** 9}</label>
+																		<label className="small text-uppercase text-light-primary">Balance {new Intl.NumberFormat().format(Number(buyAmount) / 10 ** 9)}</label>
 																	</div>
 
 																</Card>
@@ -705,19 +695,19 @@ const Home = () => {
 														<Col xl={6} md={6} className='mb-2'>
 															<div className='me-2'>
 																<span className='text-light-primary text-uppercase small fw-medium'>funds raised</span>
-																<h6 className='text-primary fw-bold'>{entireBuyAmount} SOL</h6>
+																<h6 className='text-primary fw-bold'>{new Intl.NumberFormat().format(entireBuyAmount)} SOL</h6>
 															</div>
 														</Col>
 														<Col xl={6} md={6} className='mb-2'>
 															<div className='me-2'>
 																<span className='text-light-primary text-uppercase small fw-medium'>bitme sold / available</span>
-																<h6 className='text-primary mb-0 fw-bold'>{totalBuyAmount} / 500 000 000</h6>
+																<h6 className='text-primary mb-0 fw-bold'>{totalBuyAmount} / 500,000,000</h6>
 															</div>
 														</Col>
 														<Col xl={6} md={6} className='mb-2'>
 															<div className=''>
 																<span className='text-light-primary text-uppercase small fw-medium'>liquidity pool</span>
-																<h6 className='text-primary mb-0 fw-bold'>${entireBuyAmount} ({entireBuyAmount} SOL)</h6>
+																<h6 className='text-primary mb-0 fw-bold'>${new Intl.NumberFormat().format(entireBuyAmount * price)} ({entireBuyAmount} SOL)</h6>
 															</div>
 														</Col>
 													</Row>

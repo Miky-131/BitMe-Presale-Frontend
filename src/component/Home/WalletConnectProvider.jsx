@@ -16,7 +16,7 @@ export const WalletConnectProvider = ({children}) => {
     const endpoint = useMemo(() => {
         if (network === WalletAdapterNetwork.Mainnet) {
             // return 'https://rpc.hellomoon.io/00f4178d-d782-4d0e-ac29-02706daa7be2'
-            return 'https://mainnet.helius-rpc.com/?api-key=2d5226a1-a06a-4b96-a766-2ab2c0fcd68d'
+            return 'https://solana-mainnet.g.alchemy.com/v2/3FRlEKAI1kYBliTwa5fxWznT83uElMes'
         }
         return clusterApiUrl(network)
     }, [network])
