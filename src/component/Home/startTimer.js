@@ -26,7 +26,7 @@ function StartTimer({ saleStartIs, setSaleStartIs, setSaleIs }) {
         const currentDate = new Date();
         // console.log('currentDate', currentDate);
         // currentDate.setTime(currentDate.getTime() + (14 * 60 * 60 * 1000));
-        let targetDate = new Date("Thu May 16 2024 15:00:00 GMT");
+        let targetDate = new Date("Thu May 17 2024 17:00:00 GMT");
         // console.log('targetDate', targetDate);
         // targetDate.setTime(targetDate.getTime() + (14 * 60 * 60 * 1000));
 

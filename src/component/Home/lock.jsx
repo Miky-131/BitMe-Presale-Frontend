@@ -19,7 +19,7 @@ const Lock = () => {
       toast.error('Invalid password!');
       return;
     }
-    window.location.href = config.BASE_URL+'dev-home';
+    window.location.href = config.BASE_URL;
   }
   return (
     <>

@@ -36,15 +36,16 @@ const Home = () => {
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [solBalance, setSolBalance] = useState(``);
 	const { buyToken, balance, price_per_token, buyAmount, totalBuyAmount, entireBuyAmount, startTime, endTime } = usePresale();
-	const _totalBuyAmount = totalBuyAmount + 7725;
+	const _totalBuyAmount = totalBuyAmount + 15990;
 
 	let soldBitMe_per = parseFloat((_totalBuyAmount * 100) / 500000000).toFixed(5);
 	const currentTime = Date.now();
-	let startTimeDate = '2024/05/17  08:00 AM';
-	let endTimeDate = '2024/05/22  08:00 AM';
+	let startTimeDate = '2024/05/17  05:00 PM';
+	let endTimeDate = '2024/05/22  05:00 PM';
 	let duration = '5';
 	// const referAddress = "8tFunKMZagDsCRgKusmtdNPcPW2ReEzr7RvuV5hK6kbD";
 	let referAddress = loginData?.referredBy ? loginData?.referredBy : '';
+	console.log("referdata", loginData)
 	const normalizedBalance = Number(balance) / 10 ** 9 ;
 	const onBuyToken = async () => {
 		try {
@@ -565,9 +566,9 @@ const Home = () => {
 										</Card>
 										<Card className='p-2  mb-2 position-relative'>
 
-											{startTime * 1000 > currentTime &&
+											{/* {startTime * 1000 > currentTime &&
 												<div className='boxOverlay'></div>
-											}
+											} */}
 
 											{isLoggedIn && saleIs != 'LIVE' && !isRedeemEnable &&
 												<>

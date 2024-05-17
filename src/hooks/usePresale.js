@@ -1,4 +1,4 @@
-// @ts-check
+
 import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
@@ -18,7 +18,7 @@ window.Buffer = buffer.Buffer;
 /* global BigInt */
 
 export default function usePresale() {
-  const { publicKey, sendTransaction, wallet } = useWallet();
+  const { publicKey, sendTransaction } = useWallet();
   const anchorWallet = useAnchorWallet();
   const { connection } = useConnection();
   const {connected: walletConnected} = useWallet();
@@ -50,10 +50,12 @@ export default function usePresale() {
     }
   }, [connection, anchorWallet]);
 
+  
+
   useEffect(() => {
     const getPresaleInfo = async () => {
-    const programforread = new Program(IDL, PRESALE_ID, { connection });
-    setProgramForRead(programforread)
+    const programread = new Program(IDL, PRESALE_ID, { connection });
+    setProgramForRead(programread);
 
       if (programforread) {
         try {

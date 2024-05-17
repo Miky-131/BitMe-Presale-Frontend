@@ -37,8 +37,8 @@ function App() {
           <WalletModalProvider >
             <BrowserRouter>
               <Routes>
-                <Route path={`${config.BASE_URL}`} element={<Lock />} />
-                <Route path={`${config.BASE_URL}dev-home`} element={<Home />} />
+                {/* <Route path={`${config.BASE_URL}`} element={<Lock />} /> */}
+                <Route path={`${config.BASE_URL}`} element={<Home />} />
                 {/* <Route path={`${config.BASE_URL}`} element={<Home />} />
                 <Route path={`${config.BASE_URL}bitdex`} element={<Bitdex />} />
                 <Route path={`${config.BASE_URL}presale/app/:refCode`} element={<Home />} /> */}
