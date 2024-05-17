@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import config from '../../config';
 import { Container, Row, Col, Nav, Navbar, Button, Form, Image } from 'react-bootstrap';
 import '../../component/componentCss/header.css';
 import { authenticateUserAction } from '../../coreFile/action';
@@ -8,20 +7,17 @@ import { useParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { WalletConnectProvider } from '../../component/Home/WalletConnectProvider';
 import config from '../../config';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+// import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletSelect } from '../../component/WalletSelect.jsx';
-import { FaXTwitter,FaTelegram } from "react-icons/fa6";
-import CustomWalletConnectButton from '../../component/Home/customWalletConnect.jsx';
-
+import { FaXTwitter, FaTelegram } from "react-icons/fa6";
+// import CustomWalletConnectButton from '../../component/Home/customWalletConnect.jsx';
 
 const Header = ({ isLoggedIn, setisLoggedIn }) => {
 	const _useWallet = useWallet();
 	let { refCode } = useParams();
 	const [isSticky, setIsSticky] = useState(false);
-	// const [isLoggedIn, setisLoggedIn] = useState(false);
 	const loginData = Cookies.get('bitmeUserLogin') ? JSON.parse(Cookies.get('bitmeUserLogin')) : null;
-
 	let path = window.location.pathname;
 
 	useEffect(() => {
@@ -29,7 +25,6 @@ const Header = ({ isLoggedIn, setisLoggedIn }) => {
 			setisLoggedIn(true);
 		}
 	}, [isLoggedIn]);
-
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -40,9 +35,7 @@ const Header = ({ isLoggedIn, setisLoggedIn }) => {
 				setIsSticky(false);
 			}
 		};
-
 		window.addEventListener('scroll', handleScroll);
-
 		// Clean up the event listener
 		return () => {
 			window.removeEventListener('scroll', handleScroll);
@@ -51,7 +44,6 @@ const Header = ({ isLoggedIn, setisLoggedIn }) => {
 
 	useEffect(() => {
 		if (_useWallet.connected) {
-			
 			loginUser(_useWallet?.publicKey?.toBase58())
 		} else {
 			console.log("_useWallet : disconnect")
@@ -64,19 +56,17 @@ const Header = ({ isLoggedIn, setisLoggedIn }) => {
 		try {
 			let Data = {
 				walletAddress: publicKey,
-				refCode : refCode ? refCode : ''
+				refCode: refCode ? refCode : ''
 			}
 			let res = await authenticateUserAction(Data);
 
 			if (res.success) {
-				// toast.success('Connected successfully!')
 				Cookies.set('bitmeUserLogin', JSON.stringify(res.data));
 				setisLoggedIn(true);
 			}
 		} catch (err) {
 		}
 	}
-
 
 	return (
 		<>
@@ -91,8 +81,8 @@ const Header = ({ isLoggedIn, setisLoggedIn }) => {
 							<Navbar.Toggle aria-controls="basic-navbar-nav" />
 							<Navbar.Collapse id="basic-navbar-nav">
 								<Nav className="mx-auto">
-									<Nav.Link href={`${config.BASE_URL}`} className={(path == "/" || path.match('presale')) && 'active' }>Public Sale</Nav.Link>
-									<Nav.Link href={`${config.BASE_URL}bitdex`} className={ path.match('bitdex') && 'active' } >BitDEX</Nav.Link>
+									<Nav.Link href={`${config.BASE_URL}`} className={(path == "/" || path.match('presale')) && 'active'}>Public Sale</Nav.Link>
+									<Nav.Link href={`${config.BASE_URL}bitdex`} className={path.match('bitdex') && 'active'} >BitDEX</Nav.Link>
 									<Nav.Link target='__blank' href="https://bitme.ai/bitshare">BitSHARE</Nav.Link>
 									<Nav.Link target='__blank' href="https://docs.bitme.ai/">Docs</Nav.Link>
 									{/* <Nav.link>
@@ -108,16 +98,14 @@ const Header = ({ isLoggedIn, setisLoggedIn }) => {
 									</Nav.link> */}
 								</Nav>
 								<div className="d-flex me-2 fs-4 social-link">
-									<div className='me-3'><a href='https://twitter.com/Bitme_ai' target='__blank' className=''><FaXTwitter/></a></div>
-									<div className='me-3'><a href='https://t.me/Bitme_ai' target='__blank' className=''><FaTelegram/></a></div>
+									<div className='me-3'><a href='https://twitter.com/Bitme_ai' target='__blank' className=''><FaXTwitter /></a></div>
+									<div className='me-3'><a href='https://t.me/Bitme_ai' target='__blank' className=''><FaTelegram /></a></div>
 								</div>
 								<div className='headbtn wltBtn wltBtn'>
 									<WalletSelect />
-									{/* <CustomWalletConnectButton _useWallet={_useWallet} isLoggedIn={isLoggedIn} setisLoggedIn={setisLoggedIn} loginData={loginData} /> */}
-									{/* <Button variant='light-primary' className='me-2 btn-sm px-4 refer_and_earn'> Disconnect</Button> */}
 								</div>
 
-							
+
 							</Navbar.Collapse>
 						</Container>
 					</Navbar>

@@ -17,7 +17,7 @@ import Lock from './component/Home/lock';
 
 function App() {
   const network = WalletAdapterNetwork.Mainnet;
-  const endpoint = "https://solana-mainnet.g.alchemy.com/v2/3FRlEKAI1kYBliTwa5fxWznT83uElMes";
+  const endpoint = "https://rpc.shyft.to?api_key=PxS3KZVzhndyCMWb";
 
   const wallets = useMemo(
     () => [
@@ -37,11 +37,11 @@ function App() {
           <WalletModalProvider >
             <BrowserRouter>
               <Routes>
-                {/* <Route path={`${config.BASE_URL}`} element={<Lock />} />
-                <Route path={`${config.BASE_URL}dev-home`} element={<Home />} /> */}
-                <Route path={`${config.BASE_URL}`} element={<Home />} />
+                <Route path={`${config.BASE_URL}`} element={<Lock />} />
+                <Route path={`${config.BASE_URL}dev-home`} element={<Home />} />
+                {/* <Route path={`${config.BASE_URL}`} element={<Home />} />
                 <Route path={`${config.BASE_URL}bitdex`} element={<Bitdex />} />
-                <Route path={`${config.BASE_URL}presale/app/:refCode`} element={<Home />} />
+                <Route path={`${config.BASE_URL}presale/app/:refCode`} element={<Home />} /> */}
               </Routes>
             </BrowserRouter>
           </WalletModalProvider>

@@ -1,3 +1,4 @@
+// @ts-check
 import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
@@ -17,7 +18,7 @@ window.Buffer = buffer.Buffer;
 /* global BigInt */
 
 export default function usePresale() {
-  const { publicKey } = useWallet();
+  const { publicKey, sendTransaction, wallet } = useWallet();
   const anchorWallet = useAnchorWallet();
   const { connection } = useConnection();
   const {connected: walletConnected} = useWallet();
@@ -108,12 +109,12 @@ export default function usePresale() {
         }
       }
     };
-
     getUserInfo();
     getPresaleInfo();
   }, [publicKey, transactionPending]);
 
-  const buyToken = async (solBalance, referAddress, wallet) => {
+  
+  const buyToken = async (solBalance) => {
     if (program && publicKey) {
       try {
         setTransactionPending(true);
@@ -134,53 +135,56 @@ export default function usePresale() {
           program.programId
         );
         const buyerAssociatedTokenAccount =
-        await anchor.utils.token.associatedAddress({
-          mint: TOKEN_PUBKEY,
-          owner: publicKey,
-        });
-        
-        const [presaleAssociatedTokenAccount] =
-        findProgramAddressSync(
-          [
-            utf8.encode(ESCROW_SEED),
-            presaleInfo.toBuffer(),
-            
-          ],
-          program.programId
-        );
-        // Use BigInt for large number calculations  
-        const refer_Address = "98BCiW6oDdYG5wNb2Srik2bPJXJMfAVG8Q9y49tEnB5J"      
-        const bigIntSolAmount =
-        BigInt(Number(solBalance * 10 ** TOKEN_DECIMAL).toFixed(0));
-        const tx = await program.methods
-        .buyToken(
-          new anchor.BN(bigIntSolAmount.toString()),
-          new PublicKey(refer_Address)
-        )
-        .accounts({
-          presaleInfo,
-          presaleTokenMintAccount: TOKEN_PUBKEY,
-          buyerPresaleTokenAssociatedTokenAccount: buyerAssociatedTokenAccount,
-          presalePresaleTokenAssociatedTokenAccount: presaleAssociatedTokenAccount,
-          presaleAuthority: PRESALE_AUTHORITY,
-          userInfo,
-          buyerAuthority: publicKey,
-          buyer: publicKey,
-          solReceiver: receiver,
-          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-          systemProgram: anchor.web3.SystemProgram.programId,
-          tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
-          associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
-        })
-        .transaction();
-        let blockhash = (await connection.getLatestBlockhash('finalized')).blockhash;
-        tx.recentBlockhash = blockhash;
-        tx.feePayer = publicKey;
-      
-        const signedTx = await wallet.signTransaction(tx);
+          await anchor.utils.token.associatedAddress({
+            mint: TOKEN_PUBKEY,
+            owner: publicKey,
+          });
 
-        await connection.sendRawTransaction(signedTx.serialize());
-        toast.success("Token purchase was successful.");
+        const [presaleAssociatedTokenAccount] =
+          findProgramAddressSync(
+            [
+              utf8.encode(ESCROW_SEED),
+              presaleInfo.toBuffer(),
+
+            ],
+            program.programId
+          );
+        // console.log(program.methods
+        //   .buyToken)
+        // Use BigInt for large number calculations        
+        const bigIntSolAmount =
+          BigInt(Number(solBalance * 10 ** TOKEN_DECIMAL).toFixed(0));
+          const referAddress = "98BCiW6oDdYG5wNb2Srik2bPJXJMfAVG8Q9y49tEnB5J"
+        const tx = await program.methods
+          .buyToken(
+            new anchor.BN(bigIntSolAmount.toString()),
+            new PublicKey(referAddress)
+          )
+          .accounts({
+            presaleInfo,
+            presaleTokenMintAccount: TOKEN_PUBKEY,
+            buyerPresaleTokenAssociatedTokenAccount: buyerAssociatedTokenAccount,
+            presalePresaleTokenAssociatedTokenAccount: presaleAssociatedTokenAccount,
+            presaleAuthority: PRESALE_AUTHORITY,
+            userInfo,
+            buyerAuthority: publicKey,
+            buyer: publicKey,
+            solReceiver: receiver,
+            rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+            systemProgram: anchor.web3.SystemProgram.programId,
+            tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
+            associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
+          })
+          .transaction();
+          let blockhash = (await connection.getLatestBlockhash('finalized')).blockhash;
+          tx.recentBlockhash = blockhash;
+          tx.feePayer = publicKey;
+
+          
+        await sendTransaction(tx, connection, {maxRetries:0, skipPreflight: true}).then(()=>{
+          toast.success("Token purchase was successful.");
+        });
+
         saveData(getAuthToken, publicKey?.toBase58(), solBalance, solBalance * price_per_token, price_per_token);
         return false;
       } catch (error) {

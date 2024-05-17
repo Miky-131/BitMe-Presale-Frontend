@@ -78,6 +78,10 @@ body .hlUwZf div:first-child {
     background-color: transparent;
     min-height: 48px;
 }
+body select {
+    outline: none;
+}
+
 .refText {
     padding: 3px 10px;
     border-radius: 4px;

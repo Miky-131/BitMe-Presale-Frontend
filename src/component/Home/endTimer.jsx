@@ -23,7 +23,6 @@ function EndTimer({ saleStartIs, saleIs, setSaleIs, setIsRedeemEnable }) {
     const currentDate = new Date();
     // currentDate.setTime(currentDate.getTime() + (14 * 60 * 60 * 1000));
     let targetDate = new Date("Tue May 21 2024 15:00:00 GMT");
-    // console.log('SaleEnd-targetDate', targetDate);
     // targetDate.setTime(targetDate.getTime() + (14 * 60 * 60 * 1000));
     const difference = targetDate - currentDate;
 

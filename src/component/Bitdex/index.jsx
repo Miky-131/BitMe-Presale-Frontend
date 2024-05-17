@@ -1,19 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import config from '../../config';
-import { Container, Row, Col, Button, Card, Form, InputGroup, Dropdown, DropdownButton } from 'react-bootstrap';
+import { Container, Row, Col, Button, Card, Form } from 'react-bootstrap';
 import Header from '../../directives/Header'
-import Footer from '../../directives/Footer'
 import toast, { Toaster } from 'react-hot-toast';
-import Cookies from "js-cookie";
-import { useWallet } from '@solana/wallet-adapter-react';
-import usePresale from "../../hooks/usePresale";
-// import { authenticateUserAction } from '../../coreFile/action';
 import { IoIosArrowDown } from "react-icons/io";
 import '../componentCss/bitdex.css'
 import "../componentCss/home.css"
 
 const Bitdex = () => {
-	const _useWallet = useWallet();
 	const [isLoggedIn, setisLoggedIn] = useState(false);
 
 	return (
@@ -31,7 +25,7 @@ const Bitdex = () => {
 										Access a multi-blockchain decentralized exchange where $BITME holders can trade a broad range
 										of cryptocurrencies with no fees, powered by AI to ensure the best rates and efficient trading.
 									</h6>
-									<h6 class="mb-0 fw-bold text-uppercase">Launching May 21st</h6>
+									<h6 class="mb-0 fw-bold text-uppercase">Launching May 23rd</h6>
 								</div>
 							</Col>
 
@@ -93,7 +87,7 @@ const Bitdex = () => {
 															</Form.Group>
 
 															<div className='d-flex justify-content-between mb-1 px-2'>
-																
+
 																{/* <label className="small text-uppercase text-light-primary">Max</label>
 																<label className="small text-uppercase text-light-primary">Balance: 0.0</label> */}
 															</div>

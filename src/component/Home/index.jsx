@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import config from '../../config';
 import { Container, Row, Col, Button, Card, Modal, Form, Table } from 'react-bootstrap';
 import Header from '../../directives/Header'
-import Footer from '../../directives/Footer'
 import "../componentCss/home.css"
 import DataTable, { createTheme } from 'react-data-table-component';
 import { FaRegClone } from "react-icons/fa";
@@ -10,17 +9,12 @@ import copy from 'copy-to-clipboard';
 import toast, { Toaster } from 'react-hot-toast';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Cookies from "js-cookie";
-// import { authenticateUserAction } from '../../coreFile/action';
-// import { Navigate, useParams } from "react-router-dom";
-
 import usePresale from "../../hooks/usePresale";
-// import ReverseTimer from './startTimer';
 import Refferalbtn from './refferalbtn'
 import '../componentCss/modal.css'
 import '../componentCss/responsive.css'
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletSelect } from '../WalletSelect';
-import { PRESALE_PROGRAM_PUBKEY } from "../../hooks/constants";
 import EndTimer from './endTimer';
 import StartTimer from './startTimer';
 import { getTrxHistoryAction } from '../../coreFile/action';
@@ -31,39 +25,47 @@ const now = 0;
 const Home = () => {
 	const _useWallet = useWallet();
 	const loginData = Cookies.get('bitmeUserLogin') ? JSON.parse(Cookies.get('bitmeUserLogin')) : null;
-	// let { refCode } = useParams();
 	const [saleIs, setSaleIs] = useState('WAITING');
 	const [saleStartIs, setSaleStartIs] = useState('RUNNING');
 	const [isRedeemEnable, setIsRedeemEnable] = useState(false);
 	const [data, setTrxHistory] = useState([]);
 	const [price, setPrice] = useState(0)
-
-
 	const [show, setShow] = useState(false);
 	const [refLink, setRefLink] = useState('');
 	const [isLoggedIn, setisLoggedIn] = useState(false);
-	const [solBalance, setSolBalance] = useState(0);
+	const [confirmLoading, setConfirmLoading] = useState(false);
+	const [solBalance, setSolBalance] = useState(``);
 	const { buyToken, balance, price_per_token, buyAmount, totalBuyAmount, entireBuyAmount, startTime, endTime } = usePresale();
+	const _totalBuyAmount = totalBuyAmount + 7725;
 
-	let soldBitMe_per = parseFloat((totalBuyAmount * 100) / 500000000).toFixed(5);
+	let soldBitMe_per = parseFloat((_totalBuyAmount * 100) / 500000000).toFixed(5);
 	const currentTime = Date.now();
-	// var startTimeType = new Date(parseInt(startTime * 1000));
-	// const startTimeDate = startTimeType.toUTCString();
-	// var endTimeType = new Date(parseInt(endTime * 1000));
-	// const endTimeDate = endTimeType.toUTCString();
-	// const duration = (endTime - startTime) / (3600 * 24);
-
-	let startTimeDate = '2024/05/16  08:00 AM';
-	let endTimeDate = '2024/05/21  08:00 AM';
+	let startTimeDate = '2024/05/17  08:00 AM';
+	let endTimeDate = '2024/05/22  08:00 AM';
 	let duration = '5';
 	// const referAddress = "8tFunKMZagDsCRgKusmtdNPcPW2ReEzr7RvuV5hK6kbD";
 	let referAddress = loginData?.referredBy ? loginData?.referredBy : '';
+	const normalizedBalance = Number(balance) / 10 ** 9 ;
 	const onBuyToken = async () => {
-		if (solBalance < 0.1) {
-			toast.warning("Please check SOL balance again.");
-			return;
+		try {
+			// const _balance = await getBalance()
+			// if(Number(_balance) / 10 ** 9 < solBalance){
+			// 	toast.error("Insufficiant SOL balance");
+			// 	return;
+			// }
+			setConfirmLoading(true);
+			// if (solBalance < 0.01) {
+			// 	toast.warning("Minimum sol amount is 0.01 SOL");
+			// 	setConfirmLoading(false);
+			// 	return;
+			// }
+			await buyToken(solBalance, referAddress, _useWallet);
+			getTrxHistory();
+			setConfirmLoading(false);
 		}
-		buyToken(solBalance, referAddress, _useWallet);
+		catch (err) {
+			toast.error("Something went wrong. Please try again.");
+		}
 	};
 
 	const setMaxValue = () => {
@@ -73,16 +75,20 @@ const Home = () => {
 
 	var url = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
 	useEffect(() => {
-		const getPrice = async() => {
+		const getPrice = async () => {
 			fetch(url)
-			.then(response => response.json())
-			.then(data => setPrice(data.solana.usd))
+				.then(response => response.json())
+				.then(data => setPrice(data.solana.usd))
 		}
 		getPrice()
 	}, [])
 
 	useEffect(() => {
 		getTrxHistory()
+
+		setInterval(() => {
+			getTrxHistory()
+		}, 20000);
 	}, []);
 	const getTrxHistory = async () => {
 		try {
@@ -103,7 +109,6 @@ const Home = () => {
 	}, [loginData, isLoggedIn]);
 
 	useEffect(() => {
-		// console.log(_useWallet.wallets)
 		if (_useWallet.connected) {
 			setisLoggedIn(true);
 			// loginUser(_useWallet?.publicKey?.toBase58())
@@ -142,27 +147,49 @@ const Home = () => {
 	const columns = [
 		{
 			name: 'Time',
-			width: '25%',
 			height: '20px',
 			cell: (item) => {
-        return `${item?.datetime}`;
-      },
+				return (
+					<>
+					<div className='d-md-flex'>
+					   <div className='text-nowrap me-md-2'>{item?.date}</div>
+					
+						<div className='text-nowrap'>{item?.time}</div>
+						</div>
+					</>
+				);
+			},
 		},
 		{
 			name: 'Address',
-			width: '50%',
+			// width: '35%',
 			height: '20px',
 			cell: (item) => {
-        return `${item?.walletAddress}`;
-      },
+				return `${item?.walletAddress.substr(0, 6) + '....' + item?.walletAddress.slice(-6)}`;
+			},
 		},
+		// {
+		// 	name: 'Token Price',
+		// 	height: '20px',
+		// 	cell: (item) => {
+		// 		return (
+		// 			<>
+		// 			<div className='d-sm-flex'>
+		// 			   <div className='text-nowrap'>${item?.tokenPrice}</div>
+					
+		// 				<div className='text-nowrap'>/SOL</div>
+		// 				</div>
+		// 			</>
+		// 		);
+		// 	},
+		// },
 		{
 			name: 'Amount',
-			width: '20%',
+			// width: '20%',
 			height: '20px',
 			cell: (item) => {
-        return `${item?.amountYouReceive} BITME`;
-      },
+				return `${item?.amountYouReceive} BITME`;
+			},
 		},
 	]
 
@@ -236,6 +263,40 @@ const Home = () => {
 	// 	amount: '0.0 bitme'
 	// },
 	// ];
+	const customStyles = {
+		pagination: {
+			style: {
+				color: '#643025',
+				fontWeight: '700',
+				backgroundColor: 'transparent',
+				borderTop: '1px solid transparent',
+			},
+			pageButtonsStyle: {
+				borderRadius: '50%',
+				height: '30px',
+				width: '30px',
+				padding: '3px 5px',
+				margin: '5px',
+				cursor: 'pointer',
+				transition: '0.4s',
+				color: '#839496',
+				fill: '#839496',
+				backgroundColor: '#b39a8f',
+				'&:disabled': {
+					cursor: 'unset',
+					color: '#643025',
+					fill: '#643025',
+				},
+				'&:hover:not(:disabled)': {
+					backgroundColor: '#8e675c',
+				},
+				'&:focus': {
+					outline: 'none',
+					backgroundColor: '#8e675c',
+				},
+			},
+		},
+	};
 
 	createTheme('solarized', {
 		text: {
@@ -303,12 +364,12 @@ const Home = () => {
 								</div>
 							</div>
 							<div xl={3} md={4} sm={4} xs={6}>
-								<div className='text-end  how_to_buy'>
+								<div className='text-end  how_to_buy mb-3'>
 
 									{/* <Button onClick={() => redirectTo('https://t.me/Bitme_ai')} variant='light-primary' className='me-3 btn-sm px-4 mb-4'>JOIN COMMUNITY</Button> */}
-									<a href='https://docs.bitme.ai/intro-token/tokenomics' target="_blank" className='text-uppercase me-3 bg-transparent text-decoration-underline border-0 px-0 mb-1 howtobuy d-inline-block'>Tokenomics</a>
+									<span className='d-inline-block'><a href='https://docs.bitme.ai/intro-token/tokenomics' target="_blank" className='text-uppercase me-3 bg-transparent text-decoration-underline border-0 px-0 mb-1 howtobuy tokenomicsbtn' rel="noreferrer">Tokenomics</a></span>
 
-									<a href='https://docs.bitme.ai/bitme/public-sale-of-usdbitme#bitme-public-sale-quick-start-guide' target="_blank" className='text-uppercase me-3 bg-transparent text-decoration-underline border-0 px-0 mb-3 howtobuy d-inline-block'>how to buy?</a>
+									<span className='d-inline-block'><a href='https://docs.bitme.ai/bitme/public-sale-of-usdbitme#bitme-public-sale-quick-start-guide' target="_blank" className='text-uppercase me-3 bg-transparent text-decoration-underline border-0 px-0 mb-3 howtobuy' rel="noreferrer">how to buy?</a></span>
 								</div>
 							</div>
 
@@ -355,7 +416,7 @@ const Home = () => {
 												<div className='mb-3'>
 													<label className="small text-uppercase text-light-primary">token address</label>
 													<h6 className='mb-0 fw-bold d-flex align-items-center text-break'>
-														<a style={{ color: '#643025' }} target="_blank" href={`https://solscan.io/token/${config.TOKEN_CONTRACT}#holders`}> {config.TOKEN_CONTRACT} </a>
+														<a style={{ color: '#643025' }} target="_blank" href={`https://solscan.io/token/${config.TOKEN_CONTRACT}#holders`} rel="noreferrer"> {config.TOKEN_CONTRACT} </a>
 														{/* <a style={{ color: '#643025' }} target="_blank" href={`https://solscan.io/token/${PRESALE_PROGRAM_PUBKEY.toString()}`}> {PRESALE_PROGRAM_PUBKEY.toString()} </a> */}
 													</h6>
 												</div>
@@ -373,7 +434,7 @@ const Home = () => {
 												</div>
 												<div className='mb-3'>
 													<label className="small text-uppercase text-light-primary">start / end price</label>
-													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>7500 BITME per SOL / 1500 BITME per SOL</h6>
+													<h6 className='mb-0 fw-bold d-flex align-items-center text-uppercase text-break'>7,500 BITME per SOL / 1,500 BITME per SOL</h6>
 												</div>
 												<div className='mb-3'>
 													<label className="small text-uppercase text-light-primary">Start time</label>
@@ -492,8 +553,8 @@ const Home = () => {
 														<Card className='p-2'>
 															<label className="small text-uppercase text-light-primary">Tokens Released</label>
 															<div className='d-flex justify-content-between mb-2'>
-																<h6 className='mb-0 fw-bold d-sm-flex align-items-center'>{new Intl.NumberFormat().format(totalBuyAmount)} / 500,000,000 BITME <img src={`${config.BASE_URL}assets/images/bitme.png`} width={`16px`} className='ms-1' /></h6>
-																<h6 className='mb-0 fw-bold'>{new Intl.NumberFormat().format(totalBuyAmount / (5 * 10 ** 6))}%</h6>
+																<h6 className='mb-0 fw-bold d-sm-flex align-items-center'>{new Intl.NumberFormat().format(_totalBuyAmount)} / 500,000,000 BITME <img src={`${config.BASE_URL}assets/images/bitme.png`} width={`16px`} className='ms-1' /></h6>
+																<h6 className='mb-0 fw-bold'>{new Intl.NumberFormat().format(_totalBuyAmount / (5 * 10 ** 6))}%</h6>
 															</div>
 															<ProgressBar now={now} label={`${now}%`} />
 														</Card>
@@ -510,7 +571,7 @@ const Home = () => {
 
 											{isLoggedIn && saleIs != 'LIVE' && !isRedeemEnable &&
 												<>
-													{/* <div className='boxOverlay'></div> */}
+													<div className='boxOverlay'></div>
 												</>
 											}
 
@@ -582,17 +643,9 @@ const Home = () => {
 																		<label className="small text-uppercase text-light-primary">You Pay</label>
 																	</div>
 																	<Form.Group className=" position-relative mb-1" controlId="formBasicEmail">
-																		<Form.Control type="number" value={Number(solBalance).toString()} onChange={(e) => {
-																			setSolBalance(Number(e.target.value));
+																		<Form.Control type="number" placeholder='0' value={solBalance} min={0} onChange={(e) => {
+																			setSolBalance(e.target.value);
 																		}} className='border-0 rounded-2' />
-																		{/* <input
-																		type="number"
-																		value={Number(solBalance).toString()}
-																		onChange={(e) => {
-																			setSolBalance(Number(e.target.value));
-																		}}
-																		className='border-0 rounded-2'
-																	/> */}
 																		<h6 className='mb-0 fw-bold d-flex align-items-center position-absolute copybtn bg-transparent me-2'>SOL<img src={`${config.BASE_URL}assets/images/solana.png`} width={`16px`} className='ms-1' /></h6>
 																	</Form.Group>
 																	<div className='d-flex justify-content-between mb-1 px-2'>
@@ -610,11 +663,11 @@ const Home = () => {
 																		<label className="small text-uppercase text-light-primary">You Get</label>
 																	</div>
 																	<Form.Group className=" position-relative mb-1" controlId="formBasicEmail">
-																		<Form.Control type="number" value={new Intl.NumberFormat().format(solBalance * price_per_token)} className='border-0 rounded-2' />
-																		{/* <input
-																		value={Number(solBalance * price_per_token).toFixed(2)}
-																		className='border-0 rounded-2'
-																	/> */}
+																		{/* <Form.Control type="number" value={new Intl.NumberFormat().format(solBalance * price_per_token)} className='border-0 rounded-2' /> */}
+																		<Form.Control type="number"
+																			value={Number(solBalance * price_per_token)}
+																			className='border-0 rounded-2'
+																		/>
 																		<h6 className='mb-0 fw-bold d-flex align-items-center position-absolute copybtn bg-transparent me-2'>BITME<img src={`${config.BASE_URL}assets/images/bitme.png`} width={`16px`} className='ms-1' /></h6>
 																	</Form.Group>
 																	<div className='d-flex justify-content-between mb-1 px-2'>
@@ -626,12 +679,24 @@ const Home = () => {
 															</div>
 														</Col>
 														<Col lg={12} className=''>
-															<Button
-																className='text-uppercase w-100 mb-2'
-																onClick={onBuyToken}
-															>
-																Confirm
-															</Button>
+															{(isLoggedIn && saleIs != 'LIVE' && !isRedeemEnable) || solBalance < 0.01 ?
+																<Button
+																	className='text-uppercase w-100 mb-2'
+																	disabled
+																>
+																	Confirm
+																</Button>
+																:
+																<>
+																	{confirmLoading ?
+																		<Button className='text-uppercase w-100 mb-2' disabled
+																		>Processing...</Button>
+																		:
+																		<Button className='text-uppercase w-100 mb-2' disabled={solBalance > normalizedBalance || 0.01 > solBalance } onClick={onBuyToken}
+																		>Confirm</Button>
+																	}
+																</>
+															}
 															<div className='text-uppercase text-center fw-medium lh-sm xs-small'>
 																by clicking confirm, you agree to our <a href='https://docs.bitme.ai/ressources/terms-of-use' style={{ color: '#643025' }} target='__blank'>terms of use</a>
 															</div>
@@ -688,7 +753,7 @@ const Home = () => {
 														<Col xl={6} md={6} className='mb-2'>
 															<div className='me-2'>
 																<span className='text-light-primary text-uppercase small fw-medium'>actual price</span>
-																<h6 className='text-primary fw-bold'>{price_per_token / 10} BITME / {1 / 10} SOL</h6>
+																<h6 className='text-primary fw-bold'>{new Intl.NumberFormat().format(price_per_token / 10)} BITME / {1 / 10} SOL</h6>
 															</div>
 														</Col>
 														<Col xl={6} md={6} className='mb-2'>
@@ -700,13 +765,13 @@ const Home = () => {
 														<Col xl={6} md={6} className='mb-2'>
 															<div className='me-2'>
 																<span className='text-light-primary text-uppercase small fw-medium'>bitme sold / available</span>
-																<h6 className='text-primary mb-0 fw-bold'>{totalBuyAmount} / 500,000,000</h6>
+																<h6 className='text-primary mb-0 fw-bold'>{new Intl.NumberFormat().format(_totalBuyAmount)} / 500,000,000</h6>
 															</div>
 														</Col>
 														<Col xl={6} md={6} className='mb-2'>
 															<div className=''>
 																<span className='text-light-primary text-uppercase small fw-medium'>liquidity pool</span>
-																<h6 className='text-primary mb-0 fw-bold'>${new Intl.NumberFormat().format(entireBuyAmount * price)} ({entireBuyAmount} SOL)</h6>
+																<h6 className='text-primary mb-0 fw-bold'>{entireBuyAmount} SOL</h6>
 															</div>
 														</Col>
 													</Row>
@@ -797,6 +862,8 @@ const Home = () => {
 													columns={columns}
 													data={data}
 													theme="solarized"
+													customStyles={customStyles}
+
 												/>
 
 											</Card>

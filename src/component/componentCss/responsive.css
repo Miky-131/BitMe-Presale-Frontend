@@ -48,6 +48,11 @@ body .container, body .container-lg, body .container-md, body .container-sm, bod
     }
     
   }
+  @media only screen and (max-width: 768px) {
+    .tokenomicsbtn{
+        display: none!important;
+    }
+}
   @media only screen and (max-width: 500px) {
     body .referral_earn .modal-dialog {
         position: relative;
